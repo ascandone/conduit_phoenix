@@ -9,6 +9,7 @@ defmodule ConduitWeb.Router do
     pipe_through :api
 
     post "/users", UserController, :create
+    post "/users/login", UserController, :login
   end
 
   # Enable LiveDashboard in development

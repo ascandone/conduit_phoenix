@@ -23,4 +23,20 @@ defmodule ConduitWeb.UserController do
 
     json(conn, UserJson.show(%{user: user, token: token}))
   end
+
+  def login(conn, %{
+        "user" => %{
+          "email" => email,
+          "password" => password
+        }
+      }) do
+    # TODO handle bad path
+    {:ok, user} = Accounts.authenticate_user(email, password)
+
+    # TODO handle bad path
+    {:ok, token, _claims} = Conduit.Guardian.encode_and_sign(user)
+
+    # TODO token
+    json(conn, UserJson.show(%{user: user, token: token}))
+  end
 end
