@@ -52,23 +52,23 @@ defmodule ConduitWeb.Telemetry do
       ),
 
       # Database Metrics
-      summary("conduit_phoenix.repo.query.total_time",
+      summary("conduit.repo.query.total_time",
         unit: {:native, :millisecond},
         description: "The sum of the other measurements"
       ),
-      summary("conduit_phoenix.repo.query.decode_time",
+      summary("conduit.repo.query.decode_time",
         unit: {:native, :millisecond},
         description: "The time spent decoding the data received from the database"
       ),
-      summary("conduit_phoenix.repo.query.query_time",
+      summary("conduit.repo.query.query_time",
         unit: {:native, :millisecond},
         description: "The time spent executing the query"
       ),
-      summary("conduit_phoenix.repo.query.queue_time",
+      summary("conduit.repo.query.queue_time",
         unit: {:native, :millisecond},
         description: "The time spent waiting for a database connection"
       ),
-      summary("conduit_phoenix.repo.query.idle_time",
+      summary("conduit.repo.query.idle_time",
         unit: {:native, :millisecond},
         description:
           "The time the connection spent waiting before being checked out for the query"

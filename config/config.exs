@@ -7,12 +7,12 @@
 # General application configuration
 import Config
 
-config :conduit_phoenix,
+config :conduit,
   namespace: Conduit,
   ecto_repos: [Conduit.Repo]
 
 # Configures the endpoint
-config :conduit_phoenix, ConduitWeb.Endpoint,
+config :conduit, ConduitWeb.Endpoint,
   url: [host: "localhost"],
   render_errors: [
     formats: [json: ConduitWeb.ErrorJSON],

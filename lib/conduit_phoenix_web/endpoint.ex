@@ -1,12 +1,12 @@
 defmodule ConduitWeb.Endpoint do
-  use Phoenix.Endpoint, otp_app: :conduit_phoenix
+  use Phoenix.Endpoint, otp_app: :conduit
 
   # The session will be stored in the cookie and signed,
   # this means its contents can be read but not tampered with.
   # Set :encryption_salt if you would also like to encrypt it.
   @session_options [
     store: :cookie,
-    key: "_conduit_phoenix_key",
+    key: "_conduit_key",
     signing_salt: "ssIXZTCP",
     same_site: "Lax"
   ]
@@ -19,7 +19,7 @@ defmodule ConduitWeb.Endpoint do
   # when deploying your static files in production.
   plug Plug.Static,
     at: "/",
-    from: :conduit_phoenix,
+    from: :conduit,
     gzip: false,
     only: ConduitWeb.static_paths()
 
@@ -27,7 +27,7 @@ defmodule ConduitWeb.Endpoint do
   # :code_reloader configuration of your endpoint.
   if code_reloading? do
     plug Phoenix.CodeReloader
-    plug Phoenix.Ecto.CheckRepoStatus, otp_app: :conduit_phoenix
+    plug Phoenix.Ecto.CheckRepoStatus, otp_app: :conduit
   end
 
   plug Phoenix.LiveDashboard.RequestLogger,
