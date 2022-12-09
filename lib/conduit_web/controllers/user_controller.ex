@@ -14,6 +14,13 @@ defmodule ConduitWeb.UserController do
     json(conn, UserJson.show(creds))
   end
 
+  def update(conn, %{"user" => params}) do
+    %{user: user, token: token} = authenticate(conn)
+
+    updated_user = Accounts.update_user(user, params)
+    json(conn, UserJson.show(%{user: updated_user, token: token}))
+  end
+
   # TODO handle bad path in args
   def create(conn, %{
         "user" => %{

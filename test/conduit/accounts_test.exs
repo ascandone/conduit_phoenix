@@ -68,5 +68,8 @@ defmodule Conduit.AccountsTest do
 
     assert new_user.username == attrs.username
     assert new_user.bio == attrs.bio
+
+    new_user = Accounts.get_user_by_id(user.id)
+    assert new_user.username == attrs.username
   end
 end

@@ -38,6 +38,14 @@ defmodule ConduitWeb.UserControllerTest do
       assert %{"user" => response_user} = json_response(conn, 200)
       assert response_user["username"] == user.username
     end
+
+    test "update user", %{conn: conn} do
+      user = %{username: "edited-username"}
+      conn = put(conn, ~p"/api/user", %{user: user})
+
+      assert %{"user" => response_user} = json_response(conn, 200)
+      assert response_user["username"] == user.username
+    end
   end
 
   defp login(%{conn: conn}) do

@@ -22,6 +22,7 @@ defmodule ConduitWeb.Router do
     pipe_through [:api, :require_authenticated]
 
     get "/user", UserController, :show
+    put "/user", UserController, :update
   end
 
   scope "/api", ConduitWeb do
