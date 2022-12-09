@@ -42,6 +42,13 @@ defmodule ConduitWeb.UserController do
     json(conn, UserJson.show(user, token))
   end
 
+  def create(conn, params) do
+    user = params["user"] || %{}
+
+    errors = required_fields_validation(user, ["username", "email", "password"])
+    conn |> put_status(422) |> json(%{"errors" => errors})
+  end
+
   def login(conn, %{
         "user" => %{
           "email" => email,
@@ -56,5 +63,13 @@ defmodule ConduitWeb.UserController do
 
     # TODO token
     json(conn, UserJson.show(user, token))
+  end
+
+  defp required_fields_validation(attrs, required_fields) do
+    for field <- required_fields,
+        !Map.has_key?(attrs, field) do
+      {field, ["can't be blank"]}
+    end
+    |> Enum.into(%{})
   end
 end

@@ -8,13 +8,22 @@ defmodule ConduitWeb.UserControllerTest do
     password: "jakejake"
   }
 
-  test "register a new user", %{conn: conn} do
-    conn = post(conn, ~p"/api/users", user: @example_user)
+  describe "POST /users" do
+    test "registers a new user", %{conn: conn} do
+      conn = post(conn, ~p"/api/users", user: @example_user)
 
-    assert %{"user" => user} = json_response(conn, 200)
-    assert user["email"] == @example_user.email
-    assert user["username"] == @example_user.username
-    assert user["token"] != nil
+      assert %{"user" => user} = json_response(conn, 200)
+      assert user["email"] == @example_user.email
+      assert user["username"] == @example_user.username
+      assert user["token"] != nil
+    end
+
+    test "returns error with empty body", %{conn: conn} do
+      conn = post(conn, ~p"/api/users")
+
+      assert %{"errors" => %{"email" => _, "password" => _, "username" => _}} =
+               json_response(conn, 422)
+    end
   end
 
   test "login a registered user", %{conn: conn} do
