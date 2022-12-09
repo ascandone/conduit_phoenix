@@ -55,8 +55,7 @@ defmodule Conduit.Blog do
     |> Repo.insert()
   end
 
-  def article_preload(%Article{} = article) do
-    article
-    |> Repo.preload(:author)
+  def article_preload(article_or_articles) do
+    Repo.preload(article_or_articles, :author)
   end
 end
