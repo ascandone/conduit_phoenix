@@ -29,20 +29,21 @@ defmodule ConduitWeb.UserControllerTest do
     assert user["token"] != nil
   end
 
-  test "get current user", %{conn: conn} do
-    user_fixture = AccountsFixtures.user_fixture()
+  describe "authorized endpoints" do
+    setup [:login]
 
-    # TODO handle in setup()
-    conn = put_auth_header(conn, user_fixture)
+    test "get current user", %{conn: conn, user: user} do
+      conn = get(conn, ~p"/api/user")
 
-    conn = get(conn, ~p"/api/user")
-
-    assert %{"user" => user} = json_response(conn, 200)
-    assert user["username"] == user_fixture.username
+      assert %{"user" => response_user} = json_response(conn, 200)
+      assert response_user["username"] == user.username
+    end
   end
 
-  defp put_auth_header(%Plug.Conn{} = conn, %Conduit.Accounts.User{} = user) do
+  defp login(%{conn: conn}) do
+    user = AccountsFixtures.user_fixture()
     {:ok, token, _claims} = Conduit.Guardian.encode_and_sign(user)
-    Plug.Conn.put_req_header(conn, "authorization", "Token " <> token)
+    conn = Plug.Conn.put_req_header(conn, "authorization", "Token " <> token)
+    %{conn: conn, user: user}
   end
 end
