@@ -3,12 +3,15 @@ defmodule ConduitWeb.UserController do
   alias Conduit.Accounts
   alias ConduitWeb.UserJson
 
-  def show(conn, _params) do
-    # TODO extract
-    ["Token " <> token] = Plug.Conn.get_req_header(conn, "authorization")
+  defp authenticate(conn) do
+    user = Guardian.Plug.current_resource(conn)
+    {:ok, token, _} = Conduit.Guardian.encode_and_sign(user)
+    %{user: user, token: token}
+  end
 
-    {:ok, user, _} = Conduit.Guardian.resource_from_token(token)
-    json(conn, UserJson.show(%{user: user, token: token}))
+  def show(conn, _params) do
+    creds = authenticate(conn)
+    json(conn, UserJson.show(creds))
   end
 
   # TODO handle bad path in args

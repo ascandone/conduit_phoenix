@@ -3,12 +3,30 @@ defmodule ConduitWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+
+    # error_handler: Conduit.AuthErrorHandler
+    plug Guardian.Plug.Pipeline,
+      module: Conduit.Guardian
+
+    # plug Guardian.Plug.VerifySession
+    plug Guardian.Plug.VerifyHeader, scheme: "Token"
+  end
+
+  pipeline :require_authenticated do
+    plug Guardian.Plug.EnsureAuthenticated
+    plug Guardian.Plug.LoadResource
+  end
+
+  # Authorized endpoints
+  scope "/api", ConduitWeb do
+    pipe_through [:api, :require_authenticated]
+
+    get "/user", UserController, :show
   end
 
   scope "/api", ConduitWeb do
     pipe_through :api
 
-    get "/user", UserController, :show
     post "/users", UserController, :create
     post "/users/login", UserController, :login
 
