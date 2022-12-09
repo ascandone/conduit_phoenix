@@ -14,7 +14,7 @@ defmodule ConduitWeb.ArticleJson do
     }
   end
 
-  def show(%{article: article}) do
+  def show(article) do
     %{"article" => article(article)}
   end
 end

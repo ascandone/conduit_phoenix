@@ -1,6 +1,6 @@
 defmodule ConduitWeb.UserControllerTest do
   use ConduitWeb.ConnCase, async: true
-  alias Conduit.AccountsFixtures
+  import Conduit.AccountsFixtures
 
   @example_user %{
     username: "Jacob",
@@ -46,12 +46,5 @@ defmodule ConduitWeb.UserControllerTest do
       assert %{"user" => response_user} = json_response(conn, 200)
       assert response_user["username"] == user.username
     end
-  end
-
-  defp login(%{conn: conn}) do
-    user = AccountsFixtures.user_fixture()
-    {:ok, token, _claims} = Conduit.Guardian.encode_and_sign(user)
-    conn = Plug.Conn.put_req_header(conn, "authorization", "Token " <> token)
-    %{conn: conn, user: user}
   end
 end

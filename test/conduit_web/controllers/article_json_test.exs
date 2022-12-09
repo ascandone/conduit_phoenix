@@ -22,7 +22,7 @@ defmodule ConduitWeb.ArticleJsonTest do
   }
 
   test "show/1" do
-    assert ArticleJson.show(%{article: @example_article}) == %{
+    assert ArticleJson.show(@example_article) == %{
              "article" => %{
                "slug" => @example_article.slug,
                "title" => @example_article.title,
