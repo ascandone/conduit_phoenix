@@ -14,8 +14,6 @@ defmodule ConduitWeb.UserControllerTest do
     assert %{"user" => user} = json_response(conn, 200)
     assert user["email"] == @example_user.email
     assert user["username"] == @example_user.username
-    assert not Map.has_key?(user, "password")
-    assert not Map.has_key?(user, "hashed_password")
     assert user["token"] != nil
   end
 
@@ -28,8 +26,6 @@ defmodule ConduitWeb.UserControllerTest do
     assert %{"user" => user} = json_response(conn, 200)
     assert user["email"] == @example_user.email
     assert user["username"] == @example_user.username
-    assert not Map.has_key?(user, "password")
-    assert not Map.has_key?(user, "hashed_password")
     assert user["token"] != nil
   end
 
