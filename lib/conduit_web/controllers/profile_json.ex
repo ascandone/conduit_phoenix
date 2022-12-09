@@ -11,7 +11,9 @@ defmodule ConduitWeb.ProfileJson do
 
   defp profile(%{user: %User{} = user}) do
     %{
-      username: user.username
+      username: user.username,
+      bio: user.bio,
+      image: user.image
     }
   end
 end

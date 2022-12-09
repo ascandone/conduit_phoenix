@@ -7,6 +7,8 @@ defmodule Conduit.Accounts.User do
     field :password, :string, virtual: true
     field :hashed_password, :string
     field :username, :string
+    field :bio, :string
+    field :image, :string
 
     timestamps()
   end

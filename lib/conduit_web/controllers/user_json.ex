@@ -3,7 +3,9 @@ defmodule ConduitWeb.UserJson do
     %{
       email: user.email,
       username: user.username,
-      token: token
+      token: token,
+      bio: user.bio,
+      image: user.image
     }
   end
 
