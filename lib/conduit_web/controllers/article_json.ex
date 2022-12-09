@@ -17,4 +17,11 @@ defmodule ConduitWeb.ArticleJson do
   def show(article) do
     %{"article" => article(article)}
   end
+
+  def index(articles) do
+    # TODO articles count
+    %{
+      "articles" => Enum.map(articles, &article/1)
+    }
+  end
 end
