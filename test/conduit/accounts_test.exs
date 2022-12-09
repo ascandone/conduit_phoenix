@@ -5,7 +5,7 @@ defmodule Conduit.AccountsTest do
   alias Conduit.Accounts
   alias Conduit.Accounts.User
 
-  describe "user registration" do
+  describe "Accounts.register_user/1" do
     @invalid_attrs %{email: nil, password: nil, username: nil}
     @valid_attrs %{email: "email@example.com", password: "password", username: "uname"}
 
@@ -24,7 +24,7 @@ defmodule Conduit.AccountsTest do
     end
   end
 
-  describe "user authentication" do
+  describe "Accounts.authenticate_user/2" do
     @email "user@localhost"
     @password "123456"
 
@@ -43,5 +43,10 @@ defmodule Conduit.AccountsTest do
     test "returns an error when password is not right" do
       assert {:error, :unauthorized} = Accounts.authenticate_user(@email, "invalid password")
     end
+  end
+
+  test "Accounts.get_user_by_username/1" do
+    %User{username: username} = user_fixture()
+    assert %User{username: ^username} = Accounts.get_user_by_username(username)
   end
 end

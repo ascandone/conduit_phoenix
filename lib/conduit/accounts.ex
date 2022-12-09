@@ -48,4 +48,8 @@ defmodule Conduit.Accounts do
         {:error, :unauthorized}
     end
   end
+
+  def get_user_by_username(username) do
+    Repo.one(from u in User, where: u.username == ^username)
+  end
 end

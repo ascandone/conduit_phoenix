@@ -10,6 +10,8 @@ defmodule ConduitWeb.Router do
 
     post "/users", UserController, :create
     post "/users/login", UserController, :login
+
+    get "/profiles/:username", ProfileController, :show
   end
 
   # Enable LiveDashboard in development
