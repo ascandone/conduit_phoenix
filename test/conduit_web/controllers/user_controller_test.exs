@@ -8,7 +8,7 @@ defmodule ConduitWeb.UserControllerTest do
   }
 
   test "register a new user", %{conn: conn} do
-    conn = post(conn, "/api/users", user: @example_user)
+    conn = post(conn, ~p"/api/users", user: @example_user)
 
     assert %{"user" => user} = json_response(conn, 200)
     assert user["email"] == @example_user.email
@@ -19,10 +19,10 @@ defmodule ConduitWeb.UserControllerTest do
   end
 
   test "login a registered user", %{conn: conn} do
-    post(conn, "/api/users", user: @example_user)
+    post(conn, ~p"/api/users", user: @example_user)
 
     user = %{email: @example_user.email, password: @example_user.password}
-    conn = post(conn, "/api/users/login", user: user)
+    conn = post(conn, ~p"/api/users/login", user: user)
 
     assert %{"user" => user} = json_response(conn, 200)
     assert user["email"] == @example_user.email
