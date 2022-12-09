@@ -27,7 +27,7 @@ defmodule Conduit.Accounts.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:username, :email, :password])
+    |> cast(attrs, [:username, :email, :password, :image, :bio])
     |> validate_required([:username, :email, :password])
     |> unique_constraint(:email)
     |> unique_constraint(:username)

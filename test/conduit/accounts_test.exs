@@ -15,6 +15,8 @@ defmodule Conduit.AccountsTest do
       assert user.email == @valid_attrs.email
       assert user.username == @valid_attrs.username
       assert user.hashed_password != @valid_attrs.password
+      assert user.bio == nil
+      assert user.image == nil
 
       # TODO check user is inserted
     end
@@ -48,5 +50,23 @@ defmodule Conduit.AccountsTest do
   test "Accounts.get_user_by_username/1" do
     %User{username: username} = user_fixture()
     assert %User{username: ^username} = Accounts.get_user_by_username(username)
+  end
+
+  test "Accounts.update_user/2" do
+    user = user_fixture()
+
+    attrs = %{
+      bio: "new bio",
+      username: "new-username"
+    }
+
+    new_user = Accounts.update_user(user, attrs)
+
+    assert new_user.id == user.id
+    assert new_user.email == user.email
+    assert new_user.image == user.image
+
+    assert new_user.username == attrs.username
+    assert new_user.bio == attrs.bio
   end
 end
