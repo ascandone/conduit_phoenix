@@ -1,19 +1,19 @@
 defmodule ConduitWeb.ProfileJson do
   alias Conduit.Accounts.User
 
-  def show(%{user: nil}) do
-    %{profile: nil}
+  def show(nil) do
+    %{"profile" => nil}
   end
 
-  def show(%{user: %User{} = user}) do
-    %{profile: profile(%{user: user})}
+  def show(%User{} = user) do
+    %{"profile" => profile(user)}
   end
 
-  defp profile(%{user: %User{} = user}) do
+  def profile(%User{} = user) do
     %{
-      username: user.username,
-      bio: user.bio,
-      image: user.image
+      "username" => user.username,
+      "bio" => user.bio,
+      "image" => user.image
     }
   end
 end

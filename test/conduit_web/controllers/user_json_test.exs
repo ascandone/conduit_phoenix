@@ -16,13 +16,13 @@ defmodule ConduitWeb.UserJsonTest do
   @example_token "example_token"
 
   test "show/1" do
-    assert UserJson.show(%{user: @example_user, token: @example_token}) == %{
-             user: %{
-               email: @example_user.email,
-               username: @example_user.username,
-               token: @example_token,
-               bio: @example_user.bio,
-               image: @example_user.image
+    assert UserJson.show(@example_user, @example_token) == %{
+             "user" => %{
+               "email" => @example_user.email,
+               "username" => @example_user.username,
+               "token" => @example_token,
+               "bio" => @example_user.bio,
+               "image" => @example_user.image
              }
            }
   end

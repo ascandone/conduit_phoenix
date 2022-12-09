@@ -6,19 +6,19 @@ defmodule ConduitWeb.UserController do
   defp authenticate(conn) do
     user = Guardian.Plug.current_resource(conn)
     {:ok, token, _} = Conduit.Guardian.encode_and_sign(user)
-    %{user: user, token: token}
+    {user, token}
   end
 
   def show(conn, _params) do
-    creds = authenticate(conn)
-    json(conn, UserJson.show(creds))
+    {user, token} = authenticate(conn)
+    json(conn, UserJson.show(user, token))
   end
 
   def update(conn, %{"user" => params}) do
-    %{user: user, token: token} = authenticate(conn)
+    {user, token} = authenticate(conn)
 
     updated_user = Accounts.update_user(user, params)
-    json(conn, UserJson.show(%{user: updated_user, token: token}))
+    json(conn, UserJson.show(updated_user, token))
   end
 
   # TODO handle bad path in args
@@ -39,7 +39,7 @@ defmodule ConduitWeb.UserController do
 
     {:ok, token, _claims} = Conduit.Guardian.encode_and_sign(user)
 
-    json(conn, UserJson.show(%{user: user, token: token}))
+    json(conn, UserJson.show(user, token))
   end
 
   def login(conn, %{
@@ -55,6 +55,6 @@ defmodule ConduitWeb.UserController do
     {:ok, token, _claims} = Conduit.Guardian.encode_and_sign(user)
 
     # TODO token
-    json(conn, UserJson.show(%{user: user, token: token}))
+    json(conn, UserJson.show(user, token))
   end
 end

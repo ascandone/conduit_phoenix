@@ -6,6 +6,6 @@ defmodule ConduitWeb.ProfileController do
 
   def show(conn, %{"username" => username}) do
     user = Accounts.get_user_by_username(username)
-    json(conn, ProfileJson.show(%{user: user}))
+    json(conn, ProfileJson.show(user))
   end
 end

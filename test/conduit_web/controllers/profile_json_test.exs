@@ -14,11 +14,11 @@ defmodule ConduitWeb.ProfileJsonTest do
   }
 
   test "show/1" do
-    assert ProfileJson.show(%{user: @example_user}) == %{
-             profile: %{
-               username: @example_user.username,
-               bio: @example_user.bio,
-               image: @example_user.image
+    assert ProfileJson.show(@example_user) == %{
+             "profile" => %{
+               "username" => @example_user.username,
+               "bio" => @example_user.bio,
+               "image" => @example_user.image
              }
            }
   end
