@@ -1,5 +1,6 @@
 defmodule ConduitWeb.UserControllerTest do
   use ConduitWeb.ConnCase, async: true
+  alias Conduit.AccountsFixtures
 
   @example_user %{
     username: "Jacob",
@@ -30,5 +31,22 @@ defmodule ConduitWeb.UserControllerTest do
     assert not Map.has_key?(user, "password")
     assert not Map.has_key?(user, "hashed_password")
     assert user["token"] != nil
+  end
+
+  test "get current user", %{conn: conn} do
+    user_fixture = AccountsFixtures.user_fixture()
+
+    # TODO handle in setup()
+    conn = put_auth_header(conn, user_fixture)
+
+    conn = get(conn, ~p"/api/user")
+
+    assert %{"user" => user} = json_response(conn, 200)
+    assert user["username"] == user_fixture.username
+  end
+
+  defp put_auth_header(%Plug.Conn{} = conn, %Conduit.Accounts.User{} = user) do
+    {:ok, token, _claims} = Conduit.Guardian.encode_and_sign(user)
+    Plug.Conn.put_req_header(conn, "authorization", "Token " <> token)
   end
 end

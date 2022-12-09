@@ -49,6 +49,10 @@ defmodule Conduit.Accounts do
     end
   end
 
+  def get_user_by_id(id) do
+    Repo.get(User, id)
+  end
+
   def get_user_by_username(username) do
     Repo.one(from u in User, where: u.username == ^username)
   end
