@@ -8,15 +8,13 @@ defmodule Conduit.BlogFixtures do
   Generate a article.
   """
   def article_fixture(attrs \\ %{}) do
-    user = Conduit.AccountsFixtures.user_fixture()
-
     {:ok, article} =
       attrs
       |> Enum.into(%{
         body: "some body",
         description: "some description",
         title: attrs[:title] || "Some title #{System.unique_integer([:positive])}",
-        author_id: user.id
+        author_id: attrs[:author_id] || Conduit.AccountsFixtures.user_fixture().id
       })
       |> Conduit.Blog.create_article()
 
