@@ -32,6 +32,26 @@ defmodule ConduitWeb.ArticleControllerTest do
 
       assert article_response_1["slug"] == article1.slug
     end
+
+    test "should handle the `offset` filter", %{conn: conn} do
+      article_fixture()
+      article2 = article_fixture()
+
+      conn = get(conn, ~p"/api/articles?offset=1")
+      assert %{"articles" => [article_response_1]} = json_response(conn, 200)
+
+      assert article_response_1["slug"] == article2.slug
+    end
+
+    test "should handle the `limit` filter", %{conn: conn} do
+      article1 = article_fixture()
+      article_fixture()
+
+      conn = get(conn, ~p"/api/articles?limit=1")
+      assert %{"articles" => [article_response_1]} = json_response(conn, 200)
+
+      assert article_response_1["slug"] == article1.slug
+    end
   end
 
   describe "GET /articles/:slug" do

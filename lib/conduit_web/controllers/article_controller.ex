@@ -24,7 +24,11 @@ defmodule ConduitWeb.ArticleController do
 
   def index(conn, params) do
     articles_json =
-      Blog.list_articles(author: params["author"])
+      Blog.list_articles(
+        author: params["author"],
+        offset: params["offset"],
+        limit: params["limit"]
+      )
       |> Blog.article_preload()
       |> ArticleJson.index()
 
