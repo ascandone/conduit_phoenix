@@ -23,6 +23,16 @@ defmodule ConduitWeb.ArticleControllerTest do
       assert article_response_1["slug"] == article1.slug
       assert article_response_2["slug"] == article2.slug
     end
+
+    test "should handle the `author` filter", %{
+      conn: conn,
+      article1: article1
+    } do
+      conn = get(conn, ~p"/api/articles?author=#{article1.author.username}")
+      assert %{"articles" => [article_response_1]} = json_response(conn, 200)
+
+      assert article_response_1["slug"] == article1.slug
+    end
   end
 
   describe "GET /articles/:slug" do

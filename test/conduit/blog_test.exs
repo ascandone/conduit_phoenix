@@ -9,9 +9,19 @@ defmodule Conduit.BlogTest do
     import Conduit.BlogFixtures
     import Conduit.AccountsFixtures
 
-    test "list_articles/0 returns all articles" do
+    test "list_articles/1 returns all articles" do
       article = article_fixture()
       assert Blog.list_articles() == [article]
+    end
+
+    test "list_articles/1 filters by author" do
+      user1 = user_fixture()
+      user2 = user_fixture()
+
+      article1 = article_fixture(%{author_id: user1.id})
+      _article2 = article_fixture(%{author_id: user2.id})
+
+      assert Blog.list_articles(author: user1.username) == [article1]
     end
 
     test "get_article_by_slug/1 returns the article with given id" do

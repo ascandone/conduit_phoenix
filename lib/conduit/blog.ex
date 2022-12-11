@@ -11,14 +11,29 @@ defmodule Conduit.Blog do
   @doc """
   Returns the list of articles.
 
+  Available options: `:author`
+
   ## Examples
 
       iex> list_articles()
       [%Article{}, ...]
 
   """
-  def list_articles do
-    Repo.all(Article)
+  def list_articles(options \\ []) do
+    Article
+    |> article_filter(:author, options[:author])
+    |> Repo.all()
+  end
+
+  defp article_filter(query, _, nil) do
+    query
+  end
+
+  defp article_filter(query, :author, username) do
+    query
+    |> join(:left, [a], u in assoc(a, :author))
+    |> where([_, u], u.username == ^username)
+    |> select([a, u], a)
   end
 
   @doc """
