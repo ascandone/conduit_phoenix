@@ -2,10 +2,10 @@ defmodule ConduitWeb.ArticleControllerTest do
   use ConduitWeb.ConnCase, async: true
   import Conduit.AccountsFixtures
 
-  describe "authorized actions" do
+  describe "POST /articles" do
     setup [:login]
 
-    test "create article", %{conn: conn, user: _user} do
+    test "should create an article", %{conn: conn} do
       article_args = %{
         title: "How to train your dragon",
         description: "Ever wonder how?",
