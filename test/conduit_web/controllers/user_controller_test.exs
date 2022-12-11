@@ -95,5 +95,12 @@ defmodule ConduitWeb.UserControllerTest do
       assert %{"user" => response_user} = json_response(conn, 200)
       assert response_user["username"] == user.username
     end
+
+    test "should not allow invalid fields", %{conn: conn} do
+      user = %{username: ""}
+      conn = put(conn, ~p"/api/user", %{user: user})
+
+      assert %{"errors" => %{"username" => _}} = json_response(conn, 422)
+    end
   end
 end

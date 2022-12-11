@@ -34,7 +34,7 @@ defmodule Conduit.Accounts do
   def update_user(%User{} = user, attrs \\ %{}) do
     user
     |> User.changeset(attrs)
-    |> Repo.update!()
+    |> Repo.update()
   end
 
   @doc """

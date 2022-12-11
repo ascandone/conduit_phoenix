@@ -60,7 +60,7 @@ defmodule Conduit.AccountsTest do
       username: "new-username"
     }
 
-    new_user = Accounts.update_user(user, attrs)
+    {:ok, new_user} = Accounts.update_user(user, attrs)
 
     assert new_user.id == user.id
     assert new_user.email == user.email
