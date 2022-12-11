@@ -21,19 +21,25 @@ defmodule Conduit.Blog do
   """
   def list_articles(options \\ []) do
     Article
-    |> article_filter(:author, options[:author])
+    |> article_option(:author, options[:author])
+    |> article_option(:limit, options[:limit])
     |> Repo.all()
   end
 
-  defp article_filter(query, _, nil) do
+  defp article_option(query, _, nil) do
     query
   end
 
-  defp article_filter(query, :author, username) do
+  defp article_option(query, :author, username) do
     query
     |> join(:left, [a], u in assoc(a, :author))
     |> where([_, u], u.username == ^username)
     |> select([a, u], a)
+  end
+
+  defp article_option(query, :limit, n) do
+    query
+    |> limit(^n)
   end
 
   @doc """
