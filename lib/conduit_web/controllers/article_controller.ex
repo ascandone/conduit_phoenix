@@ -6,18 +6,20 @@ defmodule ConduitWeb.ArticleController do
   alias Conduit.Accounts.User
   alias ConduitWeb.ArticleJson
 
-  def create(conn, %{"article" => article_attrs}) do
+  def create(conn, params) do
     %User{id: id} = Guardian.Plug.current_resource(conn)
+
+    article_attrs = params["article"] || %{}
     article_attrs = Map.put(article_attrs, "author_id", id)
 
-    {:ok, created_article} = Blog.create_article(article_attrs)
+    with {:ok, created_article} <- Blog.create_article(article_attrs) do
+      article_json =
+        created_article
+        |> Blog.article_preload()
+        |> ArticleJson.show()
 
-    article_json =
-      created_article
-      |> Blog.article_preload()
-      |> ArticleJson.show()
-
-    json(conn, article_json)
+      json(conn, article_json)
+    end
   end
 
   def index(conn, _params) do

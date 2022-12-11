@@ -37,5 +37,21 @@ defmodule ConduitWeb.ArticleControllerTest do
       assert article["description"] == "Ever wonder how?"
       assert article["body"] == "You have to believe"
     end
+
+    test "should return error when body is missing", %{conn: conn} do
+      conn = post(conn, ~p"/api/articles")
+
+      assert %{
+               "errors" => %{
+                 "title" => [title_err],
+                 "description" => [description_err],
+                 "body" => [body_err]
+               }
+             } = json_response(conn, 422)
+
+      assert title_err =~ "blank"
+      assert description_err =~ "blank"
+      assert body_err =~ "blank"
+    end
   end
 end
