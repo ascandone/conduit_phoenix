@@ -6,17 +6,13 @@ defmodule ConduitWeb.ArticleControllerTest do
   import Conduit.BlogFixtures
 
   describe "GET /articled" do
-    setup(%{conn: conn}) do
+    test "should list all the articles", %{conn: conn} do
       user1 = user_fixture(%{username: "author-1"})
       user2 = user_fixture(%{username: "author-2"})
 
       article1 = article_fixture(%{author_id: user1.id}) |> Blog.article_preload()
       article2 = article_fixture(%{author_id: user2.id}) |> Blog.article_preload()
 
-      %{conn: conn, article1: article1, article2: article2}
-    end
-
-    test "should list all the articles", %{conn: conn, article1: article1, article2: article2} do
       conn = get(conn, ~p"/api/articles")
       assert %{"articles" => [article_response_1, article_response_2]} = json_response(conn, 200)
 
@@ -24,10 +20,13 @@ defmodule ConduitWeb.ArticleControllerTest do
       assert article_response_2["slug"] == article2.slug
     end
 
-    test "should handle the `author` filter", %{
-      conn: conn,
-      article1: article1
-    } do
+    test "should handle the `author` filter", %{conn: conn} do
+      user1 = user_fixture(%{username: "author-1"})
+      user2 = user_fixture(%{username: "author-2"})
+
+      article1 = article_fixture(%{author_id: user1.id}) |> Blog.article_preload()
+      article_fixture(%{author_id: user2.id}) |> Blog.article_preload()
+
       conn = get(conn, ~p"/api/articles?author=#{article1.author.username}")
       assert %{"articles" => [article_response_1]} = json_response(conn, 200)
 
