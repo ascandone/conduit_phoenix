@@ -40,6 +40,14 @@ defmodule Conduit.BlogTest do
       assert Blog.list_articles(offset: 2) == [a3]
     end
 
+    test "list_articles/1 handles `limit` and `offset` option" do
+      article_fixture()
+      a2 = article_fixture()
+      article_fixture()
+
+      assert Blog.list_articles(limit: 1, offset: 1) == [a2]
+    end
+
     test "get_article_by_slug/1 returns the article with given id" do
       article = article_fixture(%{title: "example title"})
       assert Blog.get_article_by_slug("example-title") == article
