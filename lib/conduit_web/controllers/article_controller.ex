@@ -63,6 +63,18 @@ defmodule ConduitWeb.ArticleController do
     end
   end
 
+  def delete(conn, %{"slug" => slug} = _params) do
+    %User{id: author_id} = Guardian.Plug.current_resource(conn)
+    {:ok, article} = get_article_by_slug(slug)
+
+    if article.author_id != author_id do
+      {:error, :forbidden}
+    else
+      Blog.delete_article(article)
+      conn
+    end
+  end
+
   defp get_article_by_slug(slug) do
     case Blog.get_article_by_slug(slug) do
       nil ->

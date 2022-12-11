@@ -132,4 +132,29 @@ defmodule ConduitWeb.ArticleControllerTest do
       assert body_err =~ "blank"
     end
   end
+
+  describe "DELETE /articles/:slug" do
+    test "should delete the article", %{conn: conn} do
+      user = user_fixture()
+      conn = login_with(conn, user)
+
+      article = article_fixture(%{author_id: user.id})
+
+      delete(conn, ~p"/api/articles/#{article.slug}")
+
+      assert nil == Blog.get_article_by_slug(article.slug)
+    end
+
+    test "should not allow deleting another user's article", %{conn: conn} do
+      user = user_fixture()
+      conn = login_with(conn, user)
+
+      article = article_fixture()
+
+      conn = delete(conn, ~p"/api/articles/#{article.slug}")
+      assert _ = response(conn, 403)
+
+      assert Blog.get_article_by_slug(article.slug) != nil
+    end
+  end
 end

@@ -101,4 +101,8 @@ defmodule Conduit.Blog do
     |> Article.changeset(attrs)
     |> Repo.update()
   end
+
+  def delete_article(article) do
+    Repo.delete(article)
+  end
 end
