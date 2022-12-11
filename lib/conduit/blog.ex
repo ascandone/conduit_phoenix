@@ -83,4 +83,22 @@ defmodule Conduit.Blog do
   def article_preload(article_or_articles) do
     Repo.preload(article_or_articles, :author)
   end
+
+  @doc """
+  Updates an article.
+
+  ## Examples
+
+      iex> update_article(%{field: value})
+      {:ok, %Article{}}
+
+      iex> update_article(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_article(article, attrs) do
+    article
+    |> Article.changeset(attrs)
+    |> Repo.update()
+  end
 end

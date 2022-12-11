@@ -24,6 +24,7 @@ defmodule ConduitWeb.Router do
     get "/user", UserController, :show
     put "/user", UserController, :update
     post "/articles", ArticleController, :create
+    put "/articles/:slug", ArticleController, :update
   end
 
   scope "/api", ConduitWeb do

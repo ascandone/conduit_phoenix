@@ -22,10 +22,14 @@ defmodule Conduit.AccountsFixtures do
     user
   end
 
+  def login_with(conn, user) do
+    {:ok, token, _claims} = Conduit.Guardian.encode_and_sign(user)
+    Plug.Conn.put_req_header(conn, "authorization", "Token " <> token)
+  end
+
   def login(%{conn: conn}) do
     user = user_fixture()
-    {:ok, token, _claims} = Conduit.Guardian.encode_and_sign(user)
-    conn = Plug.Conn.put_req_header(conn, "authorization", "Token " <> token)
+    conn = login_with(conn, user)
     %{conn: conn, user: user}
   end
 end

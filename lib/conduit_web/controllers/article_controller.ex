@@ -35,14 +35,32 @@ defmodule ConduitWeb.ArticleController do
     json(conn, articles_json)
   end
 
-  def show(conn, params) do
-    case Blog.get_article_by_slug(params["slug"]) do
+  def show(conn, %{"slug" => slug}) do
+    with {:ok, article} <- get_article_by_slug(slug) do
+      preloaded_article = article |> Blog.article_preload() |> ArticleJson.show()
+      json(conn, preloaded_article)
+    end
+  end
+
+  def update(conn, %{"slug" => slug}) do
+    %User{id: author_id} = Guardian.Plug.current_resource(conn)
+
+    with {:ok, article} <- get_article_by_slug(slug) do
+      if article.author_id != author_id do
+        {:error, :unauthorized}
+      else
+        conn
+      end
+    end
+  end
+
+  defp get_article_by_slug(slug) do
+    case Blog.get_article_by_slug(slug) do
       nil ->
         {:error, :not_found, "article"}
 
       article ->
-        preloaded_article = article |> Blog.article_preload() |> ArticleJson.show()
-        json(conn, preloaded_article)
+        {:ok, article}
     end
   end
 end

@@ -17,8 +17,8 @@ defmodule Conduit.Blog.Article do
   def changeset(article, attrs) do
     article
     |> cast(attrs, [:title, :description, :body, :author_id])
-    |> put_slug()
     |> validate_required([:title, :description, :body, :author_id])
+    |> put_slug()
     |> cast_assoc(:author)
     |> unique_constraint(:slug)
   end

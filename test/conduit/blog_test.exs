@@ -73,5 +73,50 @@ defmodule Conduit.BlogTest do
       article = Blog.article_preload(article)
       assert article.author.username == user.username
     end
+
+    test "create_article/1 handles invalid data" do
+      user = user_fixture()
+
+      invalid_attrs = %{
+        title: "",
+        body: "some body",
+        description: "some description",
+        author_id: user.id
+      }
+
+      assert {:error, %Ecto.Changeset{}} = Blog.create_article(invalid_attrs)
+    end
+
+    test "update_article/2 updates the article with valid data" do
+      article = article_fixture()
+
+      updated_description = "updated description"
+
+      assert {:ok, %{description: ^updated_description}} =
+               Blog.update_article(article, %{description: updated_description})
+    end
+
+    test "update_article/2 updates the slug when title is changed" do
+      article = article_fixture()
+
+      updated_title = "updated title"
+
+      assert {:ok, %{title: ^updated_title, slug: "updated-title"}} =
+               Blog.update_article(article, %{title: updated_title})
+    end
+
+    test "update_article/2 does not allow changing slug directly" do
+      article = article_fixture()
+
+      assert {:ok, updated_article} = Blog.update_article(article, %{slug: "updated-slug"})
+
+      assert updated_article.slug == article.slug
+    end
+
+    test "update_article/2 handles invalid data" do
+      article = article_fixture()
+
+      assert {:error, %Ecto.Changeset{}} = Blog.update_article(article, %{title: ""})
+    end
   end
 end

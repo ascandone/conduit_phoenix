@@ -69,6 +69,22 @@ defmodule ConduitWeb.ArticleControllerTest do
     end
   end
 
+  @tag :skip
+  describe "PUT /articles/:slug" do
+    test "should update the given article", %{conn: conn} do
+      user = user_fixture()
+      conn = login_with(conn, user)
+
+      article_attrs = %{description: "updated description"}
+
+      article = article_fixture(%{author_id: user.id})
+      conn = put(conn, ~p"/api/articles/#{article.slug}", article: article_attrs)
+
+      assert %{"article" => %{"description" => response_descr}} = json_response(conn, 200)
+      assert response_descr == article_attrs.description
+    end
+  end
+
   describe "POST /articles" do
     setup [:login]
 
