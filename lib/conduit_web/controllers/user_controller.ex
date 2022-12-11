@@ -10,10 +10,10 @@ defmodule ConduitWeb.UserController do
     json(conn, UserJson.show(user, token))
   end
 
-  def update(conn, %{"user" => params}) do
+  def update(conn, params) do
     {user, token} = authenticate(conn)
-
-    updated_user = Accounts.update_user(user, params)
+    user_params = params["user"]
+    updated_user = Accounts.update_user(user, user_params)
     json(conn, UserJson.show(updated_user, token))
   end
 

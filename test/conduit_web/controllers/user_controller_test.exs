@@ -75,17 +75,20 @@ defmodule ConduitWeb.UserControllerTest do
     end
   end
 
-  describe "authorized endpoints" do
+  describe "GET /user" do
     setup [:login]
 
-    test "get current user", %{conn: conn, user: user} do
+    test "should return the current user when logged in", %{conn: conn, user: user} do
       conn = get(conn, ~p"/api/user")
-
       assert %{"user" => response_user} = json_response(conn, 200)
       assert response_user["username"] == user.username
     end
+  end
 
-    test "update user", %{conn: conn} do
+  describe "PUT /user" do
+    setup [:login]
+
+    test "should update the given user", %{conn: conn} do
       user = %{username: "edited-username"}
       conn = put(conn, ~p"/api/user", %{user: user})
 
