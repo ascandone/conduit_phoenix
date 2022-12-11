@@ -1,7 +1,8 @@
 defmodule ConduitWeb.ArticleController do
   use ConduitWeb, :controller
-  alias Conduit.Blog
+  action_fallback ConduitWeb.FallbackController
 
+  alias Conduit.Blog
   alias Conduit.Accounts.User
   alias ConduitWeb.ArticleJson
 
@@ -26,5 +27,16 @@ defmodule ConduitWeb.ArticleController do
       |> ArticleJson.index()
 
     json(conn, articles_json)
+  end
+
+  def show(conn, params) do
+    case Blog.get_article_by_slug(params["slug"]) do
+      nil ->
+        {:error, :not_found, "article"}
+
+      article ->
+        preloaded_article = article |> Blog.article_preload() |> ArticleJson.show()
+        json(conn, preloaded_article)
+    end
   end
 end

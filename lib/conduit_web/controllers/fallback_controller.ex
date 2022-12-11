@@ -2,6 +2,12 @@ defmodule ConduitWeb.FallbackController do
   use ConduitWeb, :controller
   alias ConduitWeb.ErrorJSON
 
+  def call(conn, {:error, :not_found, resource}) do
+    conn
+    |> put_status(:not_found)
+    |> json(ErrorJSON.render_not_found(resource))
+  end
+
   def call(conn, {:error, :wrong_password}) do
     conn
     |> put_status(:forbidden)

@@ -5,11 +5,6 @@ defmodule Conduit.BlogFixtures do
   """
 
   @doc """
-  Generate a unique article slug.
-  """
-  def unique_article_slug, do: "some-slug-#{System.unique_integer([:positive])}"
-
-  @doc """
   Generate a article.
   """
   def article_fixture(attrs \\ %{}) do
@@ -20,8 +15,7 @@ defmodule Conduit.BlogFixtures do
       |> Enum.into(%{
         body: "some body",
         description: "some description",
-        slug: attrs[:slug] || unique_article_slug(),
-        title: "some title",
+        title: attrs[:title] || "Some title #{System.unique_integer([:positive])}",
         author_id: user.id
       })
       |> Conduit.Blog.create_article()

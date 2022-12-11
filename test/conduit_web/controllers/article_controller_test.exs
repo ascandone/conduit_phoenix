@@ -1,6 +1,22 @@
 defmodule ConduitWeb.ArticleControllerTest do
   use ConduitWeb.ConnCase, async: true
   import Conduit.AccountsFixtures
+  import Conduit.BlogFixtures
+
+  describe "GET /articles/:slug" do
+    test "should fetch an existing article", %{conn: conn} do
+      article_fixture(%{title: "Some title"})
+      conn = get(conn, ~p"/api/articles/some-title")
+      assert %{"article" => %{"slug" => "some-title"}} = json_response(conn, 200)
+    end
+
+    test "should return 404 when the article does not exist", %{conn: conn} do
+      conn = get(conn, ~p"/api/articles/article-does-not-exist")
+
+      assert %{"errors" => %{"article" => [err]}} = json_response(conn, 404)
+      err =~ "not found"
+    end
+  end
 
   describe "POST /articles" do
     setup [:login]

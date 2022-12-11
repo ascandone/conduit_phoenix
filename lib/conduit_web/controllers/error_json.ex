@@ -3,6 +3,10 @@ defmodule ConduitWeb.ErrorJSON do
     render_errors(%{"email or password" => ["is invalid"]})
   end
 
+  def render_not_found(resource) do
+    render_errors(%{resource => ["not found"]})
+  end
+
   def render_changeset(%Ecto.Changeset{} = changeset) do
     errors =
       changeset.errors
