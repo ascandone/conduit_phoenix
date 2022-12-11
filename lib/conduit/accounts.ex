@@ -51,7 +51,7 @@ defmodule Conduit.Accounts do
         {:ok, user}
 
       true ->
-        {:error, :unauthorized}
+        {:error, :wrong_password}
     end
   end
 

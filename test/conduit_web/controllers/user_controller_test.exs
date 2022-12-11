@@ -55,6 +55,24 @@ defmodule ConduitWeb.UserControllerTest do
       assert email_error =~ "blank"
       assert password_error =~ "blank"
     end
+
+    test "returns error when email does not exist", %{conn: conn} do
+      user = %{email: "invalid-email@example.com", password: "password"}
+      conn = post(conn, ~p"/api/users/login", user: user)
+
+      assert %{"errors" => %{"email or password" => [err]}} = json_response(conn, 403)
+      assert err =~ "invalid"
+    end
+
+    test "returns error when password is not right", %{conn: conn} do
+      post(conn, ~p"/api/users", user: @example_user)
+
+      user = %{email: @example_user.email, password: "invalid password"}
+      conn = post(conn, ~p"/api/users/login", user: user)
+
+      assert %{"errors" => %{"email or password" => [err]}} = json_response(conn, 403)
+      assert err =~ "invalid"
+    end
   end
 
   describe "authorized endpoints" do

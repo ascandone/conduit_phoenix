@@ -1,4 +1,8 @@
 defmodule ConduitWeb.ErrorJSON do
+  def render_credential_errors do
+    render_errors(%{"email or password" => ["is invalid"]})
+  end
+
   def render_changeset(%Ecto.Changeset{} = changeset) do
     errors =
       changeset.errors
@@ -7,6 +11,10 @@ defmodule ConduitWeb.ErrorJSON do
       end)
       |> Enum.into(%{})
 
+    render_errors(errors)
+  end
+
+  defp render_errors(errors) do
     %{"errors" => errors}
   end
 

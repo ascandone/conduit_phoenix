@@ -46,10 +46,8 @@ defmodule ConduitWeb.UserController do
   def login(conn, params) do
     user_params = params["user"] || %{}
 
-    with {:ok, %{email: email, password: password}} <- login_params(user_params) do
-      # TODO handle bad path
-      {:ok, user} = Accounts.authenticate_user(email, password)
-
+    with {:ok, %{email: email, password: password}} <- login_params(user_params),
+         {:ok, user} <- Accounts.authenticate_user(email, password) do
       handle_user(conn, user)
     end
   end

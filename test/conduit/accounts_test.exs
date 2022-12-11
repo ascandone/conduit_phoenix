@@ -43,7 +43,7 @@ defmodule Conduit.AccountsTest do
     end
 
     test "returns an error when password is not right" do
-      assert {:error, :unauthorized} = Accounts.authenticate_user(@email, "invalid password")
+      assert {:error, :wrong_password} = Accounts.authenticate_user(@email, "invalid password")
     end
   end
 
