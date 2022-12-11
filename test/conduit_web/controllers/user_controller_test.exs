@@ -33,16 +33,28 @@ defmodule ConduitWeb.UserControllerTest do
     end
   end
 
-  test "login a registered user", %{conn: conn} do
-    post(conn, ~p"/api/users", user: @example_user)
+  describe "POST /users/login" do
+    test "login a registered user", %{conn: conn} do
+      post(conn, ~p"/api/users", user: @example_user)
 
-    user = %{email: @example_user.email, password: @example_user.password}
-    conn = post(conn, ~p"/api/users/login", user: user)
+      user = %{email: @example_user.email, password: @example_user.password}
+      conn = post(conn, ~p"/api/users/login", user: user)
 
-    assert %{"user" => user} = json_response(conn, 200)
-    assert user["email"] == @example_user.email
-    assert user["username"] == @example_user.username
-    assert user["token"] != nil
+      assert %{"user" => user} = json_response(conn, 200)
+      assert user["email"] == @example_user.email
+      assert user["username"] == @example_user.username
+      assert user["token"] != nil
+    end
+
+    test "returns errors when required fields are missing", %{conn: conn} do
+      conn = post(conn, ~p"/api/users/login")
+
+      assert %{"errors" => %{"email" => [email_error], "password" => [password_error]}} =
+               json_response(conn, 422)
+
+      assert email_error =~ "blank"
+      assert password_error =~ "blank"
+    end
   end
 
   describe "authorized endpoints" do

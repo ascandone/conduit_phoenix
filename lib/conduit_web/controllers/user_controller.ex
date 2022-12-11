@@ -5,12 +5,6 @@ defmodule ConduitWeb.UserController do
 
   action_fallback ConduitWeb.FallbackController
 
-  defp authenticate(conn) do
-    user = Guardian.Plug.current_resource(conn)
-    {:ok, token, _} = Conduit.Guardian.encode_and_sign(user)
-    {user, token}
-  end
-
   def show(conn, _params) do
     {user, token} = authenticate(conn)
     json(conn, UserJson.show(user, token))
@@ -27,24 +21,47 @@ defmodule ConduitWeb.UserController do
     user = params["user"] || %{}
 
     with {:ok, user} <- Accounts.register_user(user) do
-      {:ok, token, _claims} = Conduit.Guardian.encode_and_sign(user)
-      json(conn, UserJson.show(user, token))
+      handle_user(conn, user)
     end
   end
 
-  def login(conn, %{
-        "user" => %{
-          "email" => email,
-          "password" => password
-        }
-      }) do
-    # TODO handle bad path
-    {:ok, user} = Accounts.authenticate_user(email, password)
+  defp login_params(attrs) do
+    types = %{
+      email: :string,
+      password: :string
+    }
 
-    # TODO handle bad path
+    changeset =
+      {%{}, types}
+      |> Ecto.Changeset.cast(attrs, Map.keys(types))
+      |> Ecto.Changeset.validate_required(Map.keys(types))
+
+    if changeset.valid? do
+      {:ok, Ecto.Changeset.apply_changes(changeset)}
+    else
+      {:error, changeset}
+    end
+  end
+
+  def login(conn, params) do
+    user_params = params["user"] || %{}
+
+    with {:ok, %{email: email, password: password}} <- login_params(user_params) do
+      # TODO handle bad path
+      {:ok, user} = Accounts.authenticate_user(email, password)
+
+      handle_user(conn, user)
+    end
+  end
+
+  defp authenticate(conn) do
+    user = Guardian.Plug.current_resource(conn)
+    {:ok, token, _} = Conduit.Guardian.encode_and_sign(user)
+    {user, token}
+  end
+
+  defp handle_user(conn, user) do
     {:ok, token, _claims} = Conduit.Guardian.encode_and_sign(user)
-
-    # TODO token
     json(conn, UserJson.show(user, token))
   end
 end
