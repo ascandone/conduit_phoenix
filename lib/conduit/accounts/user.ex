@@ -9,6 +9,7 @@ defmodule Conduit.Accounts.User do
     field :username, :string
     field :bio, :string
     field :image, :string
+    field :following, :boolean, virtual: true, default: false
 
     timestamps()
   end

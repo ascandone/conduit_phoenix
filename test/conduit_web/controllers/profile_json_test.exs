@@ -10,7 +10,8 @@ defmodule ConduitWeb.ProfileJsonTest do
     password: "password",
     hashed_password: "hashed-password",
     bio: "I work at statefarm",
-    image: "https://i.stack.imgur.com/xHWG8.jpg"
+    image: "https://i.stack.imgur.com/xHWG8.jpg",
+    following: true
   }
 
   test "show/1" do
@@ -18,7 +19,8 @@ defmodule ConduitWeb.ProfileJsonTest do
              "profile" => %{
                "username" => @example_user.username,
                "bio" => @example_user.bio,
-               "image" => @example_user.image
+               "image" => @example_user.image,
+               "following" => @example_user.following
              }
            }
   end

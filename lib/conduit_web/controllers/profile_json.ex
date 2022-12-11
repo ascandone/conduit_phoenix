@@ -13,7 +13,8 @@ defmodule ConduitWeb.ProfileJson do
     %{
       "username" => user.username,
       "bio" => user.bio,
-      "image" => user.image
+      "image" => user.image,
+      "following" => user.following
     }
   end
 end

@@ -33,7 +33,8 @@ defmodule ConduitWeb.ArticleJsonTest do
                "author" => %{
                  "username" => @example_user.username,
                  "bio" => @example_user.bio,
-                 "image" => @example_user.image
+                 "image" => @example_user.image,
+                 "following" => @example_user.following
                }
              }
            }
