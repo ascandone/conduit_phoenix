@@ -2,7 +2,8 @@ defmodule ConduitWeb.UserController do
   use ConduitWeb, :controller
   alias Conduit.Accounts
   alias ConduitWeb.UserJson
-  alias ConduitWeb.ErrorJSON
+
+  action_fallback ConduitWeb.FallbackController
 
   defp authenticate(conn) do
     user = Guardian.Plug.current_resource(conn)
@@ -25,15 +26,9 @@ defmodule ConduitWeb.UserController do
   def create(conn, params) do
     user = params["user"] || %{}
 
-    case Accounts.register_user(user) do
-      {:ok, user} ->
-        {:ok, token, _claims} = Conduit.Guardian.encode_and_sign(user)
-        json(conn, UserJson.show(user, token))
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        conn
-        |> put_status(422)
-        |> json(ErrorJSON.render_changeset(changeset))
+    with {:ok, user} <- Accounts.register_user(user) do
+      {:ok, token, _claims} = Conduit.Guardian.encode_and_sign(user)
+      json(conn, UserJson.show(user, token))
     end
   end
 
