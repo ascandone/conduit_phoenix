@@ -2,6 +2,7 @@ defmodule ConduitWeb.UserController do
   use ConduitWeb, :controller
   alias Conduit.Accounts
   alias ConduitWeb.UserJson
+  alias ConduitWeb.ErrorJSON
 
   defp authenticate(conn) do
     user = Guardian.Plug.current_resource(conn)
@@ -21,32 +22,19 @@ defmodule ConduitWeb.UserController do
     json(conn, UserJson.show(updated_user, token))
   end
 
-  # TODO handle bad path in args
-  def create(conn, %{
-        "user" => %{
-          "username" => username,
-          "email" => email,
-          "password" => password
-        }
-      }) do
-    # TODO handle bad path in registration
-    {:ok, user} =
-      Accounts.register_user(%{
-        username: username,
-        email: email,
-        password: password
-      })
-
-    {:ok, token, _claims} = Conduit.Guardian.encode_and_sign(user)
-
-    json(conn, UserJson.show(user, token))
-  end
-
   def create(conn, params) do
     user = params["user"] || %{}
 
-    errors = required_fields_validation(user, ["username", "email", "password"])
-    conn |> put_status(422) |> json(%{"errors" => errors})
+    case Accounts.register_user(user) do
+      {:ok, user} ->
+        {:ok, token, _claims} = Conduit.Guardian.encode_and_sign(user)
+        json(conn, UserJson.show(user, token))
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        conn
+        |> put_status(422)
+        |> json(ErrorJSON.render_changeset(changeset))
+    end
   end
 
   def login(conn, %{
@@ -63,13 +51,5 @@ defmodule ConduitWeb.UserController do
 
     # TODO token
     json(conn, UserJson.show(user, token))
-  end
-
-  defp required_fields_validation(attrs, required_fields) do
-    for field <- required_fields,
-        !Map.has_key?(attrs, field) do
-      {field, ["can't be blank"]}
-    end
-    |> Enum.into(%{})
   end
 end

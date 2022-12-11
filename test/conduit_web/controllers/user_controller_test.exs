@@ -24,6 +24,13 @@ defmodule ConduitWeb.UserControllerTest do
       assert %{"errors" => %{"email" => _, "password" => _, "username" => _}} =
                json_response(conn, 422)
     end
+
+    test "returns an error when either the username or the email have been taken", %{conn: conn} do
+      conn = post(conn, ~p"/api/users", user: @example_user)
+      conn = post(conn, ~p"/api/users", user: Map.put(@example_user, :username, "fresh-uname"))
+      assert %{"errors" => %{"email" => [error_message]}} = json_response(conn, 422)
+      assert error_message =~ "been taken"
+    end
   end
 
   test "login a registered user", %{conn: conn} do
