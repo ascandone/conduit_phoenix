@@ -1,4 +1,11 @@
 defmodule ConduitWeb.ErrorJSON do
+  def render_forbidden() do
+    %{
+      status: "error",
+      message: "forbidden"
+    }
+  end
+
   def render_credential_errors do
     render_errors(%{"email or password" => ["is invalid"]})
   end
