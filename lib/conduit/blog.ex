@@ -23,6 +23,7 @@ defmodule Conduit.Blog do
     Article
     |> article_option(:author, options[:author])
     |> article_option(:limit, options[:limit])
+    |> article_option(:offset, options[:offset])
     |> Repo.all()
   end
 
@@ -38,8 +39,11 @@ defmodule Conduit.Blog do
   end
 
   defp article_option(query, :limit, n) do
-    query
-    |> limit(^n)
+    limit(query, ^n)
+  end
+
+  defp article_option(query, :offset, n) do
+    offset(query, ^n)
   end
 
   @doc """
