@@ -134,5 +134,21 @@ defmodule Conduit.BlogTest do
 
       assert {:error, %Ecto.Changeset{}} = Blog.update_article(article, %{title: ""})
     end
+
+    test "favorited?/2 returns false initially" do
+      user = user_fixture()
+      article = article_fixture()
+
+      assert Blog.favorited?(user, article) == false
+    end
+
+    @tag :skip
+    test "favorited/2 should make a user favorite an article" do
+      user = user_fixture()
+      article = article_fixture()
+
+      assert {:ok, _} = Blog.favorite(user, article)
+      # assert Blog.favorited?(user, article)
+    end
   end
 end

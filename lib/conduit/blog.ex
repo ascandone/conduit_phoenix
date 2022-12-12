@@ -7,7 +7,7 @@ defmodule Conduit.Blog do
   alias Conduit.Repo
 
   alias Conduit.Accounts.User
-  alias Conduit.Blog.Article
+  alias Conduit.Blog.{Article, Favorite}
   alias Conduit.Profile.Follow
 
   @doc """
@@ -115,5 +115,15 @@ defmodule Conduit.Blog do
         on: f.user_id == ^user.id,
         where: a.author_id == f.target_id
     )
+  end
+
+  def favorited?(%User{id: user_id}, %Article{id: article_id}) do
+    Repo.exists?(Favorite, [user_id, article_id])
+  end
+
+  def favorite(%User{id: user_id}, %Article{id: target_id}) do
+    %Favorite{}
+    |> Favorite.changeset(%{user_id: user_id, target_id: target_id})
+    |> Repo.insert()
   end
 end
