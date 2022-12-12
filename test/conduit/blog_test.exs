@@ -1,6 +1,7 @@
 defmodule Conduit.BlogTest do
   use Conduit.DataCase
 
+  alias Conduit.Profile
   alias Conduit.Blog
 
   describe "articles" do
@@ -46,6 +47,20 @@ defmodule Conduit.BlogTest do
       article_fixture()
 
       assert Blog.list_articles(limit: 1, offset: 1) == [a2]
+    end
+
+    test "feed/1 should only return article whose the user is following" do
+      user = user_fixture()
+      u1 = user_fixture()
+
+      Profile.follow(user, u1)
+      a1 = article_fixture(%{author_id: u1.id})
+
+      article_fixture()
+
+      assert [article] = Blog.feed(user)
+
+      assert article.author_id == u1.id
     end
 
     test "get_article_by_slug/1 returns the article with given id" do
