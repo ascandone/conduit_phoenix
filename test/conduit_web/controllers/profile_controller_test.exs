@@ -32,4 +32,16 @@ defmodule ConduitWeb.ProfileControllerTest do
       assert %{"profile" => %{"following" => true}} = json_response(conn, 200)
     end
   end
+
+  describe "POST /profiles/:username/follow" do
+    setup [:login]
+
+    test "should follow an user", %{conn: conn, user: user} do
+      target = user_fixture()
+      conn = post(conn, ~p"/api/profiles/#{target.username}/follow")
+      assert %{"profile" => %{"following" => true}} = json_response(conn, 200)
+
+      assert Profile.following?(user, target) == false
+    end
+  end
 end

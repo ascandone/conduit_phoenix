@@ -30,6 +30,7 @@ defmodule ConduitWeb.Router do
     post "/articles", ArticleController, :create
     put "/articles/:slug", ArticleController, :update
     delete "/articles/:slug", ArticleController, :delete
+    post "/profiles/:username/follow", ProfileController, :follow
   end
 
   scope "/api", ConduitWeb do
