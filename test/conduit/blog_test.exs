@@ -158,5 +158,16 @@ defmodule Conduit.BlogTest do
       {:ok, _} = Blog.delete_favorite(user, article)
       assert Blog.favorited?(user, article) == false
     end
+
+    test "count_favorites/1 should count the favorites number" do
+      article = article_fixture()
+
+      assert Blog.count_favorites(article) == 0
+
+      {:ok, _} = Blog.create_favorite(user_fixture(), article)
+      {:ok, _} = Blog.create_favorite(user_fixture(), article)
+
+      assert Blog.count_favorites(article) == 2
+    end
   end
 end

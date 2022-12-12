@@ -131,4 +131,8 @@ defmodule Conduit.Blog do
     Repo.one(from f in Favorite, where: f.user_id == ^user_id and f.article_id == ^article_id)
     |> Repo.delete()
   end
+
+  def count_favorites(%Article{id: article_id}) do
+    Repo.one!(from f in Favorite, where: f.article_id == ^article_id, select: count(f))
+  end
 end
