@@ -13,8 +13,12 @@ defmodule ConduitWeb.ArticleController do
     article_attrs = Map.put(article_attrs, "author_id", id)
 
     with {:ok, created_article} <- Blog.create_article(article_attrs) do
-      # TODO fix `favorited?`
-      render(conn, :show, article: Blog.article_preload(created_article), favorited?: false)
+      # TODO fix `favorited?`, `favorites_count`
+      render(conn, :show,
+        article: Blog.article_preload(created_article),
+        favorited?: false,
+        favorites_count: 0
+      )
     end
   end
 
@@ -27,8 +31,8 @@ defmodule ConduitWeb.ArticleController do
       )
       |> Blog.article_preload()
 
-    # TODO fix `favorited?`
-    render(conn, :index, articles: preloaded_articles, favorited?: false)
+    # TODO fix `favorited?`, `favorites_count`
+    render(conn, :index, articles: preloaded_articles, favorited?: false, favorites_count: 0)
   end
 
   def show(conn, %{"slug" => slug}) do
@@ -42,7 +46,13 @@ defmodule ConduitWeb.ArticleController do
           false
         end
 
-      render(conn, :show, article: Blog.article_preload(article), favorited?: favorited?)
+      favorites_count = Blog.count_favorites(article)
+
+      render(conn, :show,
+        article: Blog.article_preload(article),
+        favorited?: favorited?,
+        favorites_count: favorites_count
+      )
     end
   end
 
@@ -56,8 +66,12 @@ defmodule ConduitWeb.ArticleController do
         article_attrs = params["article"]
 
         with {:ok, updated_article} <- Blog.update_article(article, article_attrs) do
-          # TODO fix `favorited?`
-          render(conn, :show, article: Blog.article_preload(updated_article), favorited?: false)
+          # TODO fix `favorited?`, `favorites_count`
+          render(conn, :show,
+            article: Blog.article_preload(updated_article),
+            favorited?: false,
+            favorites_count: 0
+          )
         end
       end
     end

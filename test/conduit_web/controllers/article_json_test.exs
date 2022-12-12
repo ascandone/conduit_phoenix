@@ -24,7 +24,8 @@ defmodule ConduitWeb.ArticleJSONTest do
   test "show/1" do
     assert ArticleJSON.show(%{
              article: @example_article,
-             favorited?: true
+             favorited?: true,
+             favorites_count: 42
            }) == %{
              "article" => %{
                "slug" => @example_article.slug,
@@ -34,6 +35,7 @@ defmodule ConduitWeb.ArticleJSONTest do
                "insertedAt" => @example_article.inserted_at,
                "updatedAt" => @example_article.updated_at,
                "favorited" => true,
+               "favoritesCount" => 42,
                "author" => %{
                  "username" => @example_user.username,
                  "bio" => @example_user.bio,
