@@ -41,6 +41,19 @@ defmodule ConduitWeb.ProfileControllerTest do
       conn = post(conn, ~p"/api/profiles/#{target.username}/follow")
       assert %{"profile" => %{"following" => true}} = json_response(conn, 200)
 
+      assert Profile.following?(user, target)
+    end
+  end
+
+  describe "DELETE /profiles/:username/follow" do
+    setup [:login]
+
+    test "should unfollow an user", %{conn: conn, user: user} do
+      target = user_fixture()
+      Profile.follow(user, target)
+
+      conn = delete(conn, ~p"/api/profiles/#{target.username}/follow")
+      assert %{"profile" => %{"following" => false}} = json_response(conn, 200)
       assert Profile.following?(user, target) == false
     end
   end
