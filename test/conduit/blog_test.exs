@@ -142,7 +142,6 @@ defmodule Conduit.BlogTest do
       assert Blog.favorited?(user, article) == false
     end
 
-    @tag :skip
     test "favorited/2 should make a user favorite an article" do
       user = user_fixture()
       article = article_fixture()

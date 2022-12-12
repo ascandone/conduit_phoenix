@@ -6,9 +6,9 @@ defmodule Conduit.Blog.Favorite do
   alias Conduit.Blog.Article
 
   @primary_key false
-  schema "follows" do
+  schema "favorites" do
     belongs_to :user, User, primary_key: true
-    belongs_to :target, Article, primary_key: true
+    belongs_to :article, Article, primary_key: true
 
     timestamps()
   end
@@ -16,10 +16,10 @@ defmodule Conduit.Blog.Favorite do
   @doc false
   def changeset(favorite, attrs) do
     favorite
-    |> cast(attrs, [:user_id, :target_id])
-    |> validate_required([:user_id, :target_id])
+    |> cast(attrs, [:user_id, :article_id])
+    |> validate_required([:user_id, :article_id])
     |> foreign_key_constraint(:user_id)
-    |> foreign_key_constraint(:target_id)
-    |> unique_constraint([:user, :target], name: :user_target_favorite_unique_index)
+    |> foreign_key_constraint(:article_id)
+    |> unique_constraint([:user, :article], name: :user_article_favorite_unique_index)
   end
 end
