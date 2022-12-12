@@ -13,7 +13,8 @@ defmodule ConduitWeb.ArticleController do
     article_attrs = Map.put(article_attrs, "author_id", id)
 
     with {:ok, created_article} <- Blog.create_article(article_attrs) do
-      render(conn, :show, article: Blog.article_preload(created_article))
+      # TODO fix `favorited?`
+      render(conn, :show, article: Blog.article_preload(created_article), favorited?: false)
     end
   end
 
@@ -26,12 +27,22 @@ defmodule ConduitWeb.ArticleController do
       )
       |> Blog.article_preload()
 
-    render(conn, :index, articles: preloaded_articles)
+    # TODO fix `favorited?`
+    render(conn, :index, articles: preloaded_articles, favorited?: false)
   end
 
   def show(conn, %{"slug" => slug}) do
+    user = Guardian.Plug.current_resource(conn)
+
     with {:ok, article} <- get_article_by_slug(slug) do
-      render(conn, :show, article: Blog.article_preload(article))
+      favorited? =
+        if user != nil do
+          Blog.favorited?(user, article)
+        else
+          false
+        end
+
+      render(conn, :show, article: Blog.article_preload(article), favorited?: favorited?)
     end
   end
 
@@ -45,7 +56,8 @@ defmodule ConduitWeb.ArticleController do
         article_attrs = params["article"]
 
         with {:ok, updated_article} <- Blog.update_article(article, article_attrs) do
-          render(conn, :show, article: Blog.article_preload(updated_article))
+          # TODO fix `favorited?`
+          render(conn, :show, article: Blog.article_preload(updated_article), favorited?: false)
         end
       end
     end

@@ -2,7 +2,7 @@ defmodule ConduitWeb.ArticleJSON do
   alias ConduitWeb.ProfileJSON
   alias Conduit.Blog.Article
 
-  defp article(%Article{} = article) do
+  defp article(%{article: %Article{} = article, favorited?: favorited?}) do
     %{
       "slug" => article.slug,
       "title" => article.title,
@@ -11,18 +11,20 @@ defmodule ConduitWeb.ArticleJSON do
       "insertedAt" => article.inserted_at,
       "updatedAt" => article.updated_at,
       # TODO fix following
-      "author" => ProfileJSON.profile(%{profile: article.author, following: false})
+      "author" => ProfileJSON.profile(%{profile: article.author, following: false}),
+      "favorited" => favorited?
     }
   end
 
-  def show(%{article: article}) do
-    %{"article" => article(article)}
+  def show(%{article: article, favorited?: favorited?}) do
+    %{"article" => article(%{article: article, favorited?: favorited?})}
   end
 
   def index(%{articles: articles}) do
     # TODO articles count
     %{
-      "articles" => Enum.map(articles, &article/1)
+      # TODO fix `favorited?`
+      "articles" => Enum.map(articles, &article(%{article: &1, favorited?: false}))
     }
   end
 end

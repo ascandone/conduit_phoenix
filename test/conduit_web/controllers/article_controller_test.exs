@@ -5,7 +5,7 @@ defmodule ConduitWeb.ArticleControllerTest do
   import Conduit.AccountsFixtures
   import Conduit.BlogFixtures
 
-  describe "GET /articled" do
+  describe "GET /articles" do
     test "should list all the articles", %{conn: conn} do
       user1 = user_fixture(%{username: "author-1"})
       user2 = user_fixture(%{username: "author-2"})
@@ -66,6 +66,17 @@ defmodule ConduitWeb.ArticleControllerTest do
 
       assert %{"errors" => %{"article" => [err]}} = json_response(conn, 404)
       err =~ "not found"
+    end
+
+    test "should populate the favorite field", %{conn: conn} do
+      %{conn: conn, user: user} = login(%{conn: conn})
+
+      article = article_fixture()
+
+      {:ok, _} = Blog.create_favorite(user, article)
+
+      conn = get(conn, ~p"/api/articles/#{article.slug}")
+      assert %{"article" => %{"favorited" => true}} = json_response(conn, 200)
     end
   end
 
