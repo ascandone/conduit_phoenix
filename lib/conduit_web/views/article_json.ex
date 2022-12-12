@@ -10,7 +10,8 @@ defmodule ConduitWeb.ArticleJSON do
       "body" => article.body,
       "insertedAt" => article.inserted_at,
       "updatedAt" => article.updated_at,
-      "author" => ProfileJSON.profile(%{profile: article.author})
+      # TODO fix following
+      "author" => ProfileJSON.profile(%{profile: article.author, following: false})
     }
   end
 

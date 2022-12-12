@@ -12,6 +12,10 @@ defmodule ConduitWeb.Router do
     plug Guardian.Plug.VerifyHeader, scheme: "Token"
   end
 
+  pipeline :check_authenticated do
+    plug Guardian.Plug.LoadResource, allow_blank: true
+  end
+
   pipeline :require_authenticated do
     plug Guardian.Plug.EnsureAuthenticated
     plug Guardian.Plug.LoadResource
@@ -29,7 +33,7 @@ defmodule ConduitWeb.Router do
   end
 
   scope "/api", ConduitWeb do
-    pipe_through :api
+    pipe_through [:api, :check_authenticated]
 
     post "/users", UserController, :create
     post "/users/login", UserController, :login

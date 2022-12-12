@@ -5,16 +5,16 @@ defmodule ConduitWeb.ProfileJSON do
     %{"profile" => nil}
   end
 
-  def show(%{profile: %User{} = user}) do
-    %{"profile" => profile(%{profile: user})}
+  def show(%{profile: %User{} = user, following: following}) do
+    %{"profile" => profile(%{profile: user, following: following})}
   end
 
-  def profile(%{profile: %User{} = user}) do
+  def profile(%{profile: %User{} = user, following: following}) do
     %{
       "username" => user.username,
       "bio" => user.bio,
       "image" => user.image,
-      "following" => user.following
+      "following" => following
     }
   end
 end

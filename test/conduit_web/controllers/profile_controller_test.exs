@@ -1,6 +1,7 @@
 defmodule ConduitWeb.ProfileControllerTest do
   use ConduitWeb.ConnCase, async: true
 
+  alias Conduit.Profile
   import Conduit.AccountsFixtures
 
   describe "GET /profiles/:username" do
@@ -17,6 +18,18 @@ defmodule ConduitWeb.ProfileControllerTest do
 
       # TODO 404 code
       assert %{"profile" => nil} == json_response(conn, 200)
+    end
+
+    test "when logged in, show when profile is followed", %{conn: conn} do
+      self = user_fixture()
+      target = user_fixture()
+      Profile.follow(self, target)
+
+      conn = login_with(conn, self)
+      conn = get(conn, ~p"/api/profiles/#{target.username}")
+
+      # TODO 404 code
+      assert %{"profile" => %{"following" => true}} = json_response(conn, 200)
     end
   end
 end
