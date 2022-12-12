@@ -61,6 +61,7 @@ defmodule Conduit.BlogTest do
       assert [article] = Blog.feed(user)
 
       assert article.author_id == u1.id
+      assert article.id == a1.id
     end
 
     test "get_article_by_slug/1 returns the article with given id" do
