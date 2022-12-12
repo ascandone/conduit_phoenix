@@ -2,6 +2,7 @@ defmodule Conduit.Blog.Article do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @timestamps_opts [type: :utc_datetime]
   schema "articles" do
     field :body, :string
     field :description, :string

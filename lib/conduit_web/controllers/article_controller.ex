@@ -89,6 +89,38 @@ defmodule ConduitWeb.ArticleController do
     end
   end
 
+  def favorite(conn, %{"slug" => slug}) do
+    user = Guardian.Plug.current_resource(conn)
+    article = Blog.get_article_by_slug(slug)
+
+    {:ok, _} = Blog.create_favorite(user, article)
+
+    article = Blog.article_preload(article)
+
+    # TODO fix `favorited?`, `favorites_count`
+    render(conn, :show,
+      article: article,
+      favorited?: true,
+      favorites_count: 1
+    )
+  end
+
+  def unfavorite(conn, %{"slug" => slug}) do
+    user = Guardian.Plug.current_resource(conn)
+    article = Blog.get_article_by_slug(slug)
+
+    {:ok, _} = Blog.delete_favorite(user, article)
+
+    article = Blog.article_preload(article)
+
+    # TODO fix `favorited?`, `favorites_count`
+    render(conn, :show,
+      article: article,
+      favorited?: false,
+      favorites_count: 0
+    )
+  end
+
   defp get_article_by_slug(slug) do
     case Blog.get_article_by_slug(slug) do
       nil ->

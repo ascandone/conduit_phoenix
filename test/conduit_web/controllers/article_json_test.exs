@@ -16,8 +16,8 @@ defmodule ConduitWeb.ArticleJSONTest do
     title: "How to train your dragon",
     description: "Ever wonder how?",
     body: "It takes a Jacobian",
-    inserted_at: ~U[2015-01-13T13:00:07.123+00:00],
-    updated_at: ~U[2015-01-13T13:00:07.123+00:00],
+    inserted_at: ~U[2016-02-18T03:22:56.637Z],
+    updated_at: ~U[2016-02-18T03:48:35.824Z],
     author: @example_user
   }
 
@@ -32,8 +32,8 @@ defmodule ConduitWeb.ArticleJSONTest do
                "title" => @example_article.title,
                "description" => @example_article.description,
                "body" => @example_article.body,
-               "insertedAt" => @example_article.inserted_at,
-               "updatedAt" => @example_article.updated_at,
+               "createdAt" => "2016-02-18T03:22:56.637Z",
+               "updatedAt" => "2016-02-18T03:48:35.824Z",
                "favorited" => true,
                "favoritesCount" => 42,
                "author" => %{

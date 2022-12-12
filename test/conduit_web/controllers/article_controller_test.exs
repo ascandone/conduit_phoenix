@@ -181,4 +181,32 @@ defmodule ConduitWeb.ArticleControllerTest do
       assert Blog.get_article_by_slug(article.slug) != nil
     end
   end
+
+  describe "POST /articles/:slug/favorite" do
+    setup [:login]
+
+    test "should favorite the article", %{conn: conn, user: user} do
+      article = article_fixture()
+
+      conn = post(conn, ~p"/api/articles/#{article.slug}/favorite")
+
+      assert %{"article" => %{"favorited" => true}} = json_response(conn, 200)
+
+      assert Blog.favorited?(user, article)
+    end
+  end
+
+  describe "DELETE /articles/:slug/favorite" do
+    setup [:login]
+
+    test "should unfavorite the article", %{conn: conn, user: user} do
+      article = article_fixture()
+      Blog.create_favorite(user, article)
+      conn = delete(conn, ~p"/api/articles/#{article.slug}/favorite")
+
+      assert %{"article" => %{"favorited" => false}} = json_response(conn, 200)
+
+      assert Blog.favorited?(user, article) == false
+    end
+  end
 end
