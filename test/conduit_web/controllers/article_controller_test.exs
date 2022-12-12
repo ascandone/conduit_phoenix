@@ -87,7 +87,6 @@ defmodule ConduitWeb.ArticleControllerTest do
       Blog.create_favorite(user_fixture(), article)
       Blog.create_favorite(user_fixture(), article)
 
-      article_attrs = %{description: "updated description"}
       conn = get(conn, ~p"/api/articles/#{article.slug}")
 
       assert %{"article" => %{"favoritesCount" => 2}} = json_response(conn, 200)
