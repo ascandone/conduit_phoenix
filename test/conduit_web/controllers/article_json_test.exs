@@ -1,9 +1,9 @@
-defmodule ConduitWeb.ArticleJsonTest do
+defmodule ConduitWeb.ArticleJSONTest do
   use Conduit.DataCase
 
   alias Conduit.Accounts.User
   alias Conduit.Blog.Article
-  alias ConduitWeb.ArticleJson
+  alias ConduitWeb.ArticleJSON
 
   @example_user %User{
     username: "jake",
@@ -22,7 +22,7 @@ defmodule ConduitWeb.ArticleJsonTest do
   }
 
   test "show/1" do
-    assert ArticleJson.show(@example_article) == %{
+    assert ArticleJSON.show(%{article: @example_article}) == %{
              "article" => %{
                "slug" => @example_article.slug,
                "title" => @example_article.title,
@@ -45,7 +45,7 @@ defmodule ConduitWeb.ArticleJsonTest do
     article2 = Map.put(@example_article, "slug", "slug-2")
 
     assert %{"articles" => [article_json_1, article_json_2]} =
-             ArticleJson.index([article1, article2])
+             ArticleJSON.index(%{articles: [article1, article2]})
 
     assert article_json_1["slug"] == article1.slug
     assert article_json_2["slug"] == article2.slug

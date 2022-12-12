@@ -1,7 +1,7 @@
-defmodule ConduitWeb.ProfileJsonTest do
+defmodule ConduitWeb.ProfileJSONTest do
   use Conduit.DataCase
 
-  alias ConduitWeb.ProfileJson
+  alias ConduitWeb.ProfileJSON
   alias Conduit.Accounts.User
 
   @example_user %User{
@@ -15,7 +15,7 @@ defmodule ConduitWeb.ProfileJsonTest do
   }
 
   test "show/1" do
-    assert ProfileJson.show(@example_user) == %{
+    assert ProfileJSON.show(%{profile: @example_user}) == %{
              "profile" => %{
                "username" => @example_user.username,
                "bio" => @example_user.bio,

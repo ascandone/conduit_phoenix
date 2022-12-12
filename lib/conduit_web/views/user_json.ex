@@ -1,4 +1,4 @@
-defmodule ConduitWeb.UserJson do
+defmodule ConduitWeb.UserJSON do
   alias Conduit.Accounts.User
 
   defp user(%User{} = user, token) do
@@ -11,7 +11,7 @@ defmodule ConduitWeb.UserJson do
     }
   end
 
-  def show(user, token) do
+  def show(%{user: user, token: token}) do
     %{"user" => user(user, token)}
   end
 end

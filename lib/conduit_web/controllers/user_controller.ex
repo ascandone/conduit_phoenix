@@ -1,13 +1,13 @@
 defmodule ConduitWeb.UserController do
   use ConduitWeb, :controller
   alias Conduit.Accounts
-  alias ConduitWeb.UserJson
 
+  plug :put_view, json: ConduitWeb.UserJSON
   action_fallback ConduitWeb.FallbackController
 
   def show(conn, _params) do
     {user, token} = authenticate(conn)
-    json(conn, UserJson.show(user, token))
+    render(conn, :show, user: user, token: token)
   end
 
   def update(conn, params) do
@@ -15,7 +15,7 @@ defmodule ConduitWeb.UserController do
     user_params = params["user"] || %{}
 
     with {:ok, updated_user} <- Accounts.update_user(user, user_params) do
-      json(conn, UserJson.show(updated_user, token))
+      render(conn, :show, user: updated_user, token: token)
     end
   end
 
@@ -62,6 +62,6 @@ defmodule ConduitWeb.UserController do
 
   defp handle_user(conn, user) do
     {:ok, token, _claims} = Conduit.Guardian.encode_and_sign(user)
-    json(conn, UserJson.show(user, token))
+    render(conn, :show, user: user, token: token)
   end
 end

@@ -1,5 +1,5 @@
-defmodule ConduitWeb.ArticleJson do
-  alias ConduitWeb.ProfileJson
+defmodule ConduitWeb.ArticleJSON do
+  alias ConduitWeb.ProfileJSON
   alias Conduit.Blog.Article
 
   defp article(%Article{} = article) do
@@ -10,15 +10,15 @@ defmodule ConduitWeb.ArticleJson do
       "body" => article.body,
       "insertedAt" => article.inserted_at,
       "updatedAt" => article.updated_at,
-      "author" => ProfileJson.profile(article.author)
+      "author" => ProfileJSON.profile(%{profile: article.author})
     }
   end
 
-  def show(article) do
+  def show(%{article: article}) do
     %{"article" => article(article)}
   end
 
-  def index(articles) do
+  def index(%{articles: articles}) do
     # TODO articles count
     %{
       "articles" => Enum.map(articles, &article/1)

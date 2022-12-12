@@ -1,8 +1,8 @@
-defmodule ConduitWeb.UserJsonTest do
+defmodule ConduitWeb.UserJSONTest do
   use Conduit.DataCase
 
   alias Conduit.Accounts.User
-  alias ConduitWeb.UserJson
+  alias ConduitWeb.UserJSON
 
   @example_user %User{
     email: "example@mail.com",
@@ -16,7 +16,7 @@ defmodule ConduitWeb.UserJsonTest do
   @example_token "example_token"
 
   test "show/1" do
-    assert UserJson.show(@example_user, @example_token) == %{
+    assert UserJSON.show(%{user: @example_user, token: @example_token}) == %{
              "user" => %{
                "email" => @example_user.email,
                "username" => @example_user.username,
