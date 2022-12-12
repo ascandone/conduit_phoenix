@@ -24,7 +24,7 @@ defmodule Conduit.Blog do
   def list_articles(options \\ []) do
     Article
     |> article_option(:author, options[:author])
-    |> article_option(:limit, options[:limit])
+    |> article_option(:limit, options[:limit] || 100)
     |> article_option(:offset, options[:offset])
     |> Repo.all()
   end
@@ -83,7 +83,9 @@ defmodule Conduit.Blog do
   end
 
   def article_preload(article_or_articles) do
-    Repo.preload(article_or_articles, :author)
+    article_or_articles
+    |> Repo.preload(:author)
+    |> Repo.preload(:favorites)
   end
 
   @doc """

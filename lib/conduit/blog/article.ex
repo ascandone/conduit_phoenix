@@ -1,6 +1,7 @@
 defmodule Conduit.Blog.Article do
   use Ecto.Schema
   import Ecto.Changeset
+  alias Conduit.Blog.Favorite
 
   @timestamps_opts [type: :utc_datetime]
   schema "articles" do
@@ -10,6 +11,7 @@ defmodule Conduit.Blog.Article do
     field :title, :string
 
     belongs_to :author, Conduit.Accounts.User
+    has_many :favorites, Favorite
 
     timestamps()
   end

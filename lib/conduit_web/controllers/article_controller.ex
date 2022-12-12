@@ -16,8 +16,7 @@ defmodule ConduitWeb.ArticleController do
       # TODO fix `favorited?`, `favorites_count`
       render(conn, :show,
         article: Blog.article_preload(created_article),
-        favorited?: false,
-        favorites_count: 0
+        favorited?: false
       )
     end
   end
@@ -32,7 +31,7 @@ defmodule ConduitWeb.ArticleController do
       |> Blog.article_preload()
 
     # TODO fix `favorited?`, `favorites_count`
-    render(conn, :index, articles: preloaded_articles, favorited?: false, favorites_count: 0)
+    render(conn, :index, articles: preloaded_articles, favorited?: false)
   end
 
   def show(conn, %{"slug" => slug}) do
@@ -46,12 +45,9 @@ defmodule ConduitWeb.ArticleController do
           false
         end
 
-      favorites_count = Blog.count_favorites(article)
-
       render(conn, :show,
         article: Blog.article_preload(article),
-        favorited?: favorited?,
-        favorites_count: favorites_count
+        favorited?: favorited?
       )
     end
   end
@@ -69,8 +65,7 @@ defmodule ConduitWeb.ArticleController do
           # TODO fix `favorited?`, `favorites_count`
           render(conn, :show,
             article: Blog.article_preload(updated_article),
-            favorited?: false,
-            favorites_count: 0
+            favorited?: false
           )
         end
       end

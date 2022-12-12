@@ -4,8 +4,7 @@ defmodule ConduitWeb.ArticleJSON do
 
   defp article(%{
          article: %Article{} = article,
-         favorited?: favorited?,
-         favorites_count: favorites_count
+         favorited?: favorited?
        }) do
     %{
       "slug" => article.slug,
@@ -17,21 +16,19 @@ defmodule ConduitWeb.ArticleJSON do
       # TODO fix following
       "author" => ProfileJSON.profile(%{profile: article.author, following: false}),
       "favorited" => favorited?,
-      "favoritesCount" => favorites_count
+      "favoritesCount" => Enum.count(article.favorites)
     }
   end
 
   def show(%{
         article: article,
-        favorited?: favorited?,
-        favorites_count: favorites_count
+        favorited?: favorited?
       }) do
     %{
       "article" =>
         article(%{
           article: article,
-          favorited?: favorited?,
-          favorites_count: favorites_count
+          favorited?: favorited?
         })
     }
   end
@@ -43,11 +40,7 @@ defmodule ConduitWeb.ArticleJSON do
       "articles" =>
         Enum.map(
           articles,
-          &article(%{
-            article: &1,
-            favorited?: false,
-            favorites_count: 0
-          })
+          &article(%{article: &1, favorited?: false})
         )
     }
   end

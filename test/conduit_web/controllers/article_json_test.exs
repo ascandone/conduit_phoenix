@@ -2,7 +2,7 @@ defmodule ConduitWeb.ArticleJSONTest do
   use Conduit.DataCase
 
   alias Conduit.Accounts.User
-  alias Conduit.Blog.Article
+  alias Conduit.Blog.{Article, Favorite}
   alias ConduitWeb.ArticleJSON
 
   @example_user %User{
@@ -18,14 +18,14 @@ defmodule ConduitWeb.ArticleJSONTest do
     body: "It takes a Jacobian",
     inserted_at: ~U[2016-02-18T03:22:56.637Z],
     updated_at: ~U[2016-02-18T03:48:35.824Z],
-    author: @example_user
+    author: @example_user,
+    favorites: [%Favorite{}]
   }
 
   test "show/1" do
     assert ArticleJSON.show(%{
              article: @example_article,
-             favorited?: true,
-             favorites_count: 42
+             favorited?: true
            }) == %{
              "article" => %{
                "slug" => @example_article.slug,
@@ -35,7 +35,7 @@ defmodule ConduitWeb.ArticleJSONTest do
                "createdAt" => "2016-02-18T03:22:56.637Z",
                "updatedAt" => "2016-02-18T03:48:35.824Z",
                "favorited" => true,
-               "favoritesCount" => 42,
+               "favoritesCount" => 1,
                "author" => %{
                  "username" => @example_user.username,
                  "bio" => @example_user.bio,
