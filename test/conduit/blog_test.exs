@@ -142,12 +142,21 @@ defmodule Conduit.BlogTest do
       assert Blog.favorited?(user, article) == false
     end
 
-    test "favorited/2 should make a user favorite an article" do
+    test "create_favorite/2 should make a user favorite an article" do
       user = user_fixture()
       article = article_fixture()
 
-      assert {:ok, _} = Blog.favorite(user, article)
-      # assert Blog.favorited?(user, article)
+      assert {:ok, _} = Blog.create_favorite(user, article)
+      assert Blog.favorited?(user, article)
+    end
+
+    test "delete_favorite/2 should remove a favorite" do
+      user = user_fixture()
+      article = article_fixture()
+      {:ok, _} = Blog.create_favorite(user, article)
+
+      {:ok, _} = Blog.delete_favorite(user, article)
+      assert Blog.favorited?(user, article) == false
     end
   end
 end

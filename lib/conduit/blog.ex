@@ -121,9 +121,14 @@ defmodule Conduit.Blog do
     Repo.exists?(Favorite, [user_id, article_id])
   end
 
-  def favorite(%User{id: user_id}, %Article{id: article_id}) do
+  def create_favorite(%User{id: user_id}, %Article{id: article_id}) do
     %Favorite{}
     |> Favorite.changeset(%{user_id: user_id, article_id: article_id})
     |> Repo.insert()
+  end
+
+  def delete_favorite(%User{id: user_id}, %Article{id: article_id}) do
+    Repo.one(from f in Favorite, where: f.user_id == ^user_id and f.article_id == ^article_id)
+    |> Repo.delete()
   end
 end
