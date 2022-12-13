@@ -13,7 +13,7 @@ defmodule ConduitWeb.ArticleController do
     article_attrs = Map.put(article_attrs, "author_id", id)
 
     with {:ok, created_article} <- Blog.create_article(article_attrs) do
-      # TODO fix `favorited?`, `favorites_count`
+      # TODO fix `favorited?`
       render(conn, :show,
         article: Blog.article_preload(created_article),
         favorited?: false
@@ -42,7 +42,7 @@ defmodule ConduitWeb.ArticleController do
         {article, favorited?}
       end)
 
-    # TODO fix `favorited?`, `favorites_count`
+    # TODO fix `favorited?`
 
     render(conn, :index, articles: preloaded_articles)
   end
@@ -75,7 +75,7 @@ defmodule ConduitWeb.ArticleController do
         article_attrs = params["article"]
 
         with {:ok, updated_article} <- Blog.update_article(article, article_attrs) do
-          # TODO fix `favorited?`, `favorites_count`
+          # TODO fix `favorited?`
           render(conn, :show,
             article: Blog.article_preload(updated_article),
             favorited?: false
@@ -105,7 +105,7 @@ defmodule ConduitWeb.ArticleController do
 
     article = Blog.article_preload(article)
 
-    # TODO fix `favorited?`, `favorites_count`
+    # TODO fix `favorited?`
     render(conn, :show,
       article: article,
       favorited?: true
@@ -120,11 +120,33 @@ defmodule ConduitWeb.ArticleController do
 
     article = Blog.article_preload(article)
 
-    # TODO fix `favorited?`, `favorites_count`
+    # TODO fix `favorited?`
     render(conn, :show,
       article: article,
       favorited?: false
     )
+  end
+
+  def feed(conn, _params) do
+    user = Guardian.Plug.current_resource(conn)
+
+    articles =
+      user
+      |> Blog.feed()
+      |> Blog.article_preload()
+      |> Enum.map(fn article ->
+        favorited? =
+          if user != nil do
+            Blog.favorited?(user, article)
+          else
+            false
+          end
+
+        {article, favorited?}
+      end)
+
+    # TODO fix `favorited?`
+    render(conn, :index, articles: articles)
   end
 
   defp get_article_by_slug(slug) do
