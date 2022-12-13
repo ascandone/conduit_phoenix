@@ -52,10 +52,9 @@ defmodule Conduit.BlogTest do
     test "feed/1 should only return article whose the user is following" do
       user = user_fixture()
       u1 = user_fixture()
-
       Profile.follow(user, u1)
-      a1 = article_fixture(%{author_id: u1.id})
 
+      a1 = article_fixture(%{author_id: u1.id})
       article_fixture()
 
       assert [article] = Blog.feed(user)

@@ -120,7 +120,7 @@ defmodule Conduit.Blog do
   end
 
   def favorited?(%User{id: user_id}, %Article{id: article_id}) do
-    Repo.exists?(Favorite, [user_id, article_id])
+    Repo.exists?(from f in Favorite, where: f.user_id == ^user_id and f.article_id == ^article_id)
   end
 
   def create_favorite(%User{id: user_id}, %Article{id: article_id}) do
