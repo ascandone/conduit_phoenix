@@ -40,7 +40,7 @@ defmodule ConduitWeb.ArticleJSON do
       "articles" =>
         Enum.map(
           articles,
-          &article(%{article: &1, favorited?: false})
+          fn {article, favorited?} -> article(%{article: article, favorited?: favorited?}) end
         )
     }
   end

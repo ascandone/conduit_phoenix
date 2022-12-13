@@ -22,6 +22,8 @@ defmodule ConduitWeb.ArticleController do
   end
 
   def index(conn, params) do
+    user = Guardian.Plug.current_resource(conn)
+
     preloaded_articles =
       Blog.list_articles(
         author: params["author"],
@@ -29,9 +31,20 @@ defmodule ConduitWeb.ArticleController do
         limit: params["limit"]
       )
       |> Blog.article_preload()
+      |> Enum.map(fn article ->
+        favorited? =
+          if user != nil do
+            Blog.favorited?(user, article)
+          else
+            false
+          end
+
+        {article, favorited?}
+      end)
 
     # TODO fix `favorited?`, `favorites_count`
-    render(conn, :index, articles: preloaded_articles, favorited?: false)
+
+    render(conn, :index, articles: preloaded_articles)
   end
 
   def show(conn, %{"slug" => slug}) do
@@ -95,8 +108,7 @@ defmodule ConduitWeb.ArticleController do
     # TODO fix `favorited?`, `favorites_count`
     render(conn, :show,
       article: article,
-      favorited?: true,
-      favorites_count: 1
+      favorited?: true
     )
   end
 
@@ -111,8 +123,7 @@ defmodule ConduitWeb.ArticleController do
     # TODO fix `favorited?`, `favorites_count`
     render(conn, :show,
       article: article,
-      favorited?: false,
-      favorites_count: 0
+      favorited?: false
     )
   end
 
