@@ -20,6 +20,6 @@ defmodule Conduit.Profile.Follow do
     |> validate_required([:user_id, :target_id])
     |> foreign_key_constraint(:user_id)
     |> foreign_key_constraint(:target_id)
-    |> unique_constraint([:user, :target], name: :user_target_unique_index)
+    |> unique_constraint([:user_id, :target_id], name: :user_id_target_id_index)
   end
 end

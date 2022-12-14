@@ -45,12 +45,11 @@ defmodule Conduit.ProfileTest do
     assert Profile.unfollow(user, target) == nil
   end
 
-  @tag :skip
-  test "follow/2 should return error when called twice" do
+  test "follow/2 should return a changeset error when called twice" do
     user = user_fixture()
     target = user_fixture()
 
-    Profile.follow(user, target)
-    assert {:error, %Ecto.Changeset{}} = Profile.follow(user, target)
+    assert {:ok, _} = Profile.follow(user, target)
+    assert {:error, _} = Profile.follow(user, target)
   end
 end
