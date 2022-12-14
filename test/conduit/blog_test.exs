@@ -96,7 +96,7 @@ defmodule Conduit.BlogTest do
       assert article.slug == "some-title"
       assert article.author_id == user.id
 
-      article = Blog.article_preload(article)
+      article = Blog.article_preload(article, user)
       assert article.author.username == user.username
     end
 

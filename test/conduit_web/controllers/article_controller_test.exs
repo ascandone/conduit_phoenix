@@ -10,8 +10,8 @@ defmodule ConduitWeb.ArticleControllerTest do
       user1 = user_fixture(%{username: "author-1"})
       user2 = user_fixture(%{username: "author-2"})
 
-      article1 = article_fixture(%{author_id: user1.id}) |> Blog.article_preload()
-      article2 = article_fixture(%{author_id: user2.id}) |> Blog.article_preload()
+      article1 = article_fixture(%{author_id: user1.id}) |> Blog.article_preload(nil)
+      article2 = article_fixture(%{author_id: user2.id}) |> Blog.article_preload(nil)
 
       conn = get(conn, ~p"/api/articles")
       assert %{"articles" => [article_response_1, article_response_2]} = json_response(conn, 200)
@@ -24,8 +24,8 @@ defmodule ConduitWeb.ArticleControllerTest do
       user1 = user_fixture(%{username: "author-1"})
       user2 = user_fixture(%{username: "author-2"})
 
-      article1 = article_fixture(%{author_id: user1.id}) |> Blog.article_preload()
-      article_fixture(%{author_id: user2.id}) |> Blog.article_preload()
+      article1 = article_fixture(%{author_id: user1.id}) |> Blog.article_preload(nil)
+      article_fixture(%{author_id: user2.id}) |> Blog.article_preload(nil)
 
       conn = get(conn, ~p"/api/articles?author=#{article1.author.username}")
       assert %{"articles" => [article_response_1]} = json_response(conn, 200)

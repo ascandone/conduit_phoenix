@@ -91,10 +91,19 @@ defmodule Conduit.Blog do
     |> Repo.insert()
   end
 
-  def article_preload(article_or_articles) do
-    article_or_articles
+  def article_preload_favorited(%Article{} = article, nil) do
+    %{article | favorited: false}
+  end
+
+  def article_preload_favorited(%Article{} = article, %User{} = user) do
+    %{article | favorited: favorited?(user, article)}
+  end
+
+  def article_preload(%Article{} = article, user) do
+    article
     |> Repo.preload(:author)
     |> Repo.preload(:favorites)
+    |> article_preload_favorited(user)
   end
 
   @doc """

@@ -7,17 +7,13 @@ defmodule ConduitWeb.ArticleController do
   alias Conduit.Accounts.User
 
   def create(conn, params) do
-    %User{id: id} = Guardian.Plug.current_resource(conn)
+    user = Guardian.Plug.current_resource(conn)
 
     article_attrs = params["article"] || %{}
-    article_attrs = Map.put(article_attrs, "author_id", id)
+    article_attrs = Map.put(article_attrs, "author_id", user.id)
 
     with {:ok, created_article} <- Blog.create_article(article_attrs) do
-      # TODO fix `favorited?`
-      render(conn, :show,
-        article: Blog.article_preload(created_article),
-        favorited?: false
-      )
+      render(conn, :show, article: Blog.article_preload(created_article, user))
     end
   end
 
@@ -31,19 +27,7 @@ defmodule ConduitWeb.ArticleController do
         limit: params["limit"],
         favorited: params["favorited"]
       )
-      |> Blog.article_preload()
-      |> Enum.map(fn article ->
-        favorited? =
-          if user != nil do
-            Blog.favorited?(user, article)
-          else
-            false
-          end
-
-        {article, favorited?}
-      end)
-
-    # TODO fix `favorited?`
+      |> Enum.map(&Blog.article_preload(&1, user))
 
     render(conn, :index, articles: preloaded_articles)
   end
@@ -52,22 +36,12 @@ defmodule ConduitWeb.ArticleController do
     user = Guardian.Plug.current_resource(conn)
 
     with {:ok, article} <- get_article_by_slug(slug) do
-      favorited? =
-        if user != nil do
-          Blog.favorited?(user, article)
-        else
-          false
-        end
-
-      render(conn, :show,
-        article: Blog.article_preload(article),
-        favorited?: favorited?
-      )
+      render(conn, :show, article: Blog.article_preload(article, user))
     end
   end
 
   def update(conn, %{"slug" => slug} = params) do
-    %User{id: author_id} = Guardian.Plug.current_resource(conn)
+    %User{id: author_id} = user = Guardian.Plug.current_resource(conn)
 
     with {:ok, article} <- get_article_by_slug(slug) do
       if article.author_id != author_id do
@@ -76,11 +50,7 @@ defmodule ConduitWeb.ArticleController do
         article_attrs = params["article"]
 
         with {:ok, updated_article} <- Blog.update_article(article, article_attrs) do
-          # TODO fix `favorited?`
-          render(conn, :show,
-            article: Blog.article_preload(updated_article),
-            favorited?: false
-          )
+          render(conn, :show, article: Blog.article_preload(updated_article, user))
         end
       end
     end
@@ -104,13 +74,9 @@ defmodule ConduitWeb.ArticleController do
 
     {:ok, _} = Blog.create_favorite(user, article)
 
-    article = Blog.article_preload(article)
+    article = Blog.article_preload(article, user)
 
-    # TODO fix `favorited?`
-    render(conn, :show,
-      article: article,
-      favorited?: true
-    )
+    render(conn, :show, article: article)
   end
 
   def unfavorite(conn, %{"slug" => slug}) do
@@ -119,13 +85,9 @@ defmodule ConduitWeb.ArticleController do
 
     {:ok, _} = Blog.delete_favorite(user, article)
 
-    article = Blog.article_preload(article)
+    article = Blog.article_preload(article, user)
 
-    # TODO fix `favorited?`
-    render(conn, :show,
-      article: article,
-      favorited?: false
-    )
+    render(conn, :show, article: article)
   end
 
   def feed(conn, _params) do
@@ -134,19 +96,8 @@ defmodule ConduitWeb.ArticleController do
     articles =
       user
       |> Blog.feed()
-      |> Blog.article_preload()
-      |> Enum.map(fn article ->
-        favorited? =
-          if user != nil do
-            Blog.favorited?(user, article)
-          else
-            false
-          end
+      |> Blog.article_preload(user)
 
-        {article, favorited?}
-      end)
-
-    # TODO fix `favorited?`
     render(conn, :index, articles: articles)
   end
 
