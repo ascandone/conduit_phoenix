@@ -3,8 +3,8 @@ defmodule Conduit.Repo.Migrations.AddArticleFavorite do
 
   def change do
     create table(:favorites, primary_key: false) do
-      add :user_id, references(:users, on_delete: :delete_all), primary_key: true
-      add :article_id, references(:articles, on_delete: :delete_all), primary_key: true
+      add :user_id, references(:users, on_delete: :delete_all)
+      add :article_id, references(:articles, on_delete: :delete_all)
 
       timestamps()
     end

@@ -160,6 +160,14 @@ defmodule Conduit.BlogTest do
       assert Blog.favorited?(user, article)
     end
 
+    test "create_favorite/2 should return a changeset error when called twice" do
+      user = user_fixture()
+      article = article_fixture()
+
+      assert {:ok, _} = Blog.create_favorite(user, article)
+      assert {:error, _} = Blog.create_favorite(user, article)
+    end
+
     test "delete_favorite/2 should remove a favorite" do
       user = user_fixture()
       article = article_fixture()
