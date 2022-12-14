@@ -25,6 +25,17 @@ defmodule Conduit.BlogTest do
       assert Blog.list_articles(author: user1.username) == [article1]
     end
 
+    test "list_articles/1 filters by favorited param" do
+      user = user_fixture()
+
+      article1 = article_fixture()
+      article_fixture()
+
+      Blog.create_favorite(user, article1)
+
+      assert Blog.list_articles(favorited: user.username) == [article1]
+    end
+
     test "list_articles/1 handles `limit` option" do
       a1 = article_fixture()
       a2 = article_fixture()

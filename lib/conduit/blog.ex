@@ -24,6 +24,7 @@ defmodule Conduit.Blog do
   def list_articles(options \\ []) do
     Article
     |> article_option(:author, options[:author])
+    |> article_option(:favorited, options[:favorited])
     |> article_option(:limit, options[:limit] || 100)
     |> article_option(:offset, options[:offset])
     |> Repo.all()
@@ -38,6 +39,14 @@ defmodule Conduit.Blog do
     |> join(:left, [a], u in assoc(a, :author))
     |> where([_, u], u.username == ^username)
     |> select([a, u], a)
+  end
+
+  defp article_option(query, :favorited, username) do
+    query
+    |> join(:left, [a], f in assoc(a, :favorites))
+    |> join(:left, [a, f], u in assoc(f, :user))
+    |> where([a, f, u], u.username == ^username)
+    |> select([a, f, u], a)
   end
 
   defp article_option(query, :limit, n) do

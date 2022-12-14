@@ -28,7 +28,8 @@ defmodule ConduitWeb.ArticleController do
       Blog.list_articles(
         author: params["author"],
         offset: params["offset"],
-        limit: params["limit"]
+        limit: params["limit"],
+        favorited: params["favorited"]
       )
       |> Blog.article_preload()
       |> Enum.map(fn article ->

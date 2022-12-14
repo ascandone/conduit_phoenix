@@ -33,6 +33,20 @@ defmodule ConduitWeb.ArticleControllerTest do
       assert article_response_1["slug"] == article1.slug
     end
 
+    test "should handle the `favorited` filter", %{conn: conn} do
+      user = user_fixture()
+
+      a1 = article_fixture()
+      {:ok, _} = Blog.create_favorite(user, a1)
+
+      article_fixture()
+
+      conn = get(conn, ~p"/api/articles?favorited=#{user.username}")
+      assert %{"articles" => [article_response_1]} = json_response(conn, 200)
+
+      assert article_response_1["slug"] == a1.slug
+    end
+
     test "should handle the `offset` filter", %{conn: conn} do
       article_fixture()
       article2 = article_fixture()
