@@ -110,12 +110,11 @@ defmodule Conduit.Blog do
     Repo.delete(article)
   end
 
-  def feed(%User{} = user) do
+  def feed(%User{id: user_id}) do
     Repo.all(
       from a in Article,
         join: f in Follow,
-        on: f.user_id == ^user.id,
-        where: a.author_id == f.target_id
+        where: f.user_id == ^user_id and f.target_id == a.author_id
     )
   end
 
