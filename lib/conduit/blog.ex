@@ -24,6 +24,7 @@ defmodule Conduit.Blog do
   def list_articles(options \\ []) do
     Article
     |> article_option(:author, options[:author])
+    |> article_option(:favorited, options[:favorited])
     |> article_option(:limit, options[:limit] || 100)
     |> article_option(:offset, options[:offset])
     |> Repo.all()
@@ -38,6 +39,14 @@ defmodule Conduit.Blog do
     |> join(:left, [a], u in assoc(a, :author))
     |> where([_, u], u.username == ^username)
     |> select([a, u], a)
+  end
+
+  defp article_option(query, :favorited, username) do
+    query
+    |> join(:left, [a], f in assoc(a, :favorites))
+    |> join(:left, [a, f], u in assoc(f, :user))
+    |> where([a, f, u], u.username == ^username)
+    |> select([a, f, u], a)
   end
 
   defp article_option(query, :limit, n) do
@@ -82,10 +91,19 @@ defmodule Conduit.Blog do
     |> Repo.insert()
   end
 
-  def article_preload(article_or_articles) do
-    article_or_articles
+  def article_preload_favorited(%Article{} = article, nil) do
+    %{article | favorited: false}
+  end
+
+  def article_preload_favorited(%Article{} = article, %User{} = user) do
+    %{article | favorited: favorited?(user, article)}
+  end
+
+  def article_preload(%Article{} = article, user) do
+    article
     |> Repo.preload(:author)
     |> Repo.preload(:favorites)
+    |> article_preload_favorited(user)
   end
 
   @doc """
@@ -110,17 +128,16 @@ defmodule Conduit.Blog do
     Repo.delete(article)
   end
 
-  def feed(%User{} = user) do
+  def feed(%User{id: user_id}) do
     Repo.all(
       from a in Article,
         join: f in Follow,
-        on: f.user_id == ^user.id,
-        where: a.author_id == f.target_id
+        where: f.user_id == ^user_id and f.target_id == a.author_id
     )
   end
 
   def favorited?(%User{id: user_id}, %Article{id: article_id}) do
-    Repo.exists?(Favorite, [user_id, article_id])
+    Repo.exists?(from f in Favorite, where: f.user_id == ^user_id and f.article_id == ^article_id)
   end
 
   def create_favorite(%User{id: user_id}, %Article{id: article_id}) do

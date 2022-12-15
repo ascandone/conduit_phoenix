@@ -21,6 +21,6 @@ defmodule Conduit.Blog.Favorite do
     |> validate_required([:user_id, :article_id])
     |> foreign_key_constraint(:user_id)
     |> foreign_key_constraint(:article_id)
-    |> unique_constraint([:user, :article], name: :user_article_favorite_unique_index)
+    |> unique_constraint([:user_id, :article_id], name: :user_article_favorite_unique_index)
   end
 end

@@ -19,14 +19,12 @@ defmodule ConduitWeb.ArticleJSONTest do
     inserted_at: ~U[2016-02-18T03:22:56.637Z],
     updated_at: ~U[2016-02-18T03:48:35.824Z],
     author: @example_user,
-    favorites: [%Favorite{}]
+    favorites: [%Favorite{}],
+    favorited: true
   }
 
   test "show/1" do
-    assert ArticleJSON.show(%{
-             article: @example_article,
-             favorited?: true
-           }) == %{
+    assert ArticleJSON.show(%{article: @example_article}) == %{
              "article" => %{
                "slug" => @example_article.slug,
                "title" => @example_article.title,
@@ -51,7 +49,7 @@ defmodule ConduitWeb.ArticleJSONTest do
     article2 = Map.put(@example_article, "slug", "slug-2")
 
     assert %{"articles" => [article_json_1, article_json_2]} =
-             ArticleJSON.index(%{articles: [{article1, false}, {article2, false}]})
+             ArticleJSON.index(%{articles: [article1, article2]})
 
     assert article_json_1["slug"] == article1.slug
     assert article_json_2["slug"] == article2.slug

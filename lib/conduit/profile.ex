@@ -13,8 +13,8 @@ defmodule Conduit.Profile do
     Repo.one(from f in Follow, where: f.user_id == ^user_id and f.target_id == ^target_id)
   end
 
-  def following?(%User{} = user, %User{} = target) do
-    query_follow(user, target) != nil
+  def following?(%User{id: user_id}, %User{id: target_id}) do
+    Repo.exists?(from f in Follow, where: f.user_id == ^user_id and f.target_id == ^target_id)
   end
 
   def follow(%User{id: user_id}, %User{id: target_id}) do

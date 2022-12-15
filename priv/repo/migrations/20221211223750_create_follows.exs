@@ -3,12 +3,12 @@ defmodule Conduit.Repo.Migrations.CreateFollows do
 
   def change do
     create table(:follows, primary_key: false) do
-      add :user_id, references(:users, on_delete: :delete_all), primary_key: true
-      add :target_id, references(:users, on_delete: :nothing), primary_key: true
+      add :user_id, references(:users, on_delete: :delete_all)
+      add :target_id, references(:users, on_delete: :nothing)
 
       timestamps()
     end
 
-    create unique_index(:follows, [:user_id, :target_id], name: :user_target_unique_index)
+    create unique_index(:follows, [:user_id, :target_id], name: :user_id_target_id_index)
   end
 end
