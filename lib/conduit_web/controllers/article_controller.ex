@@ -96,7 +96,7 @@ defmodule ConduitWeb.ArticleController do
     articles =
       user
       |> Blog.feed()
-      |> Blog.article_preload(user)
+      |> Enum.map(&Blog.article_preload(&1, user))
 
     render(conn, :index, articles: articles)
   end

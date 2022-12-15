@@ -10,8 +10,7 @@ defmodule ConduitWeb.ArticleJSON do
       "body" => article.body,
       "createdAt" => DateTime.to_iso8601(article.inserted_at),
       "updatedAt" => DateTime.to_iso8601(article.updated_at),
-      # TODO fix following
-      "author" => ProfileJSON.profile(%{profile: article.author, following: false}),
+      "author" => ProfileJSON.profile(%{profile: article.author}),
       "favorited" => article.favorited,
       "favoritesCount" => Enum.count(article.favorites)
     }

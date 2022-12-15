@@ -6,17 +6,14 @@ defmodule ConduitWeb.ProfileController do
   alias Conduit.Profile
 
   def show(conn, %{"username" => username}) do
-    user = Accounts.get_user_by_username(username)
     current_user = Guardian.Plug.current_resource(conn)
 
-    following? =
-      if current_user != nil do
-        Profile.following?(current_user, user)
-      else
-        false
-      end
+    user =
+      username
+      |> Accounts.get_user_by_username()
+      |> Accounts.user_preload(current_user)
 
-    render(conn, :show, profile: user, following: following?)
+    render(conn, :show, profile: user)
   end
 
   def follow(conn, %{"username" => username}) do
@@ -27,7 +24,7 @@ defmodule ConduitWeb.ProfileController do
     else
       target = Accounts.get_user_by_username(username)
       {:ok, _} = Profile.follow(user, target)
-      render(conn, :show, profile: target, following: true)
+      render(conn, :show, profile: %{target | following: true})
     end
   end
 
@@ -39,7 +36,7 @@ defmodule ConduitWeb.ProfileController do
     else
       target = Accounts.get_user_by_username(username)
       Profile.unfollow(user, target)
-      render(conn, :show, profile: target, following: false)
+      render(conn, :show, profile: %{target | following: false})
     end
   end
 end

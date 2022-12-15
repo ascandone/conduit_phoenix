@@ -62,4 +62,20 @@ defmodule Conduit.Accounts do
   def get_user_by_username(username) do
     Repo.one(from u in User, where: u.username == ^username)
   end
+
+  defp preload_following(%User{} = user, nil) do
+    user
+  end
+
+  defp preload_following(%User{} = user, %User{} = viewer) do
+    %{user | following: Conduit.Profile.following?(viewer, user)}
+  end
+
+  def user_preload(nil, _) do
+    nil
+  end
+
+  def user_preload(%User{} = user, viewer) do
+    preload_following(user, viewer)
+  end
 end
