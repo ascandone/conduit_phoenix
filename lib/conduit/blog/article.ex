@@ -10,7 +10,7 @@ defmodule Conduit.Blog.Article do
     field :slug, :string
     field :title, :string
     field :favorited, :boolean, virtual: true, default: false
-    # field :favorites_count, :boolean, virtual: true
+    field :favorites_count, :boolean, virtual: true
 
     belongs_to :author, Conduit.Accounts.User
     has_many :favorites, Favorite

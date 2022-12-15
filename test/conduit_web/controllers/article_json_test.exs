@@ -20,7 +20,8 @@ defmodule ConduitWeb.ArticleJSONTest do
     updated_at: ~U[2016-02-18T03:48:35.824Z],
     author: @example_user,
     favorites: [%Favorite{}],
-    favorited: true
+    favorited: true,
+    favorites_count: 1
   }
 
   test "show/1" do

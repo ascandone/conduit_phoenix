@@ -103,10 +103,14 @@ defmodule Conduit.Blog do
     %{article | favorited: favorited?(user, article)}
   end
 
+  def article_preload_favorite_count(%Article{} = article) do
+    %{article | favorites_count: count_favorites(article)}
+  end
+
   def article_preload(%Article{} = article, user) do
     article
     |> Repo.preload(:author)
-    |> Repo.preload(:favorites)
+    |> article_preload_favorite_count()
     |> article_preload_favorited(user)
     |> article_preload_following_author(user)
   end
