@@ -208,9 +208,20 @@ defmodule Conduit.BlogTest do
     test "Blog.get_article_comments/1 should return created articles" do
       article = article_fixture()
       {:ok, comment1} = Blog.create_comment(%{body: "comment-1"}, article, user_fixture())
-      {:ok, comment2} = Blog.create_comment(%{body: "comment-1"}, article, user_fixture())
+      {:ok, comment2} = Blog.create_comment(%{body: "comment-2"}, article, user_fixture())
 
       assert [comment1, comment2] == Blog.get_article_comments(article)
+    end
+
+    test "Blog.preload_comment/1 should preload author data" do
+      article = article_fixture()
+
+      author = user_fixture()
+      {:ok, %Comment{id: id}} = Blog.create_comment(%{body: "comment-1"}, article, author)
+
+      comment = Blog.get_comment_by_id(id) |> Blog.preload_comment()
+
+      assert comment.author.username == author.username
     end
   end
 end

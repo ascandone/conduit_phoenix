@@ -185,4 +185,8 @@ defmodule Conduit.Blog do
         where: c.article_id == ^article_id
     )
   end
+
+  def preload_comment(%Comment{} = comment) do
+    Repo.preload(comment, :author)
+  end
 end
