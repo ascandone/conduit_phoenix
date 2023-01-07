@@ -205,6 +205,10 @@ defmodule Conduit.BlogTest do
       assert comment == fetched_comment
     end
 
+    test "Blog.get_comment_by_id/1 should return nil when no comment is found" do
+      assert Blog.get_comment_by_id(42) == nil
+    end
+
     test "Blog.get_article_comments/1 should return created articles" do
       article = article_fixture()
       {:ok, comment1} = Blog.create_comment(%{body: "comment-1"}, article, user_fixture())
