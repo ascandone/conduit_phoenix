@@ -9,6 +9,7 @@ defmodule Conduit.Blog do
   alias Conduit.Accounts.User
   alias Conduit.Blog.{Article, Favorite}
   alias Conduit.Profile.Follow
+  alias Conduit.Blog.Comment
 
   @doc """
   Returns the list of articles.
@@ -162,5 +163,26 @@ defmodule Conduit.Blog do
 
   def count_favorites(%Article{id: article_id}) do
     Repo.one!(from f in Favorite, where: f.article_id == ^article_id, select: count(f))
+  end
+
+  def create_comment(%{body: body}, %Article{id: article_id}, %User{id: user_id}) do
+    %Comment{}
+    |> Comment.changeset(%{
+      body: body,
+      article_id: article_id,
+      author_id: user_id
+    })
+    |> Repo.insert()
+  end
+
+  def get_comment_by_id(id) do
+    Repo.get(Comment, id)
+  end
+
+  def get_article_comments(%Article{id: article_id}) do
+    Repo.all(
+      from c in Comment,
+        where: c.article_id == ^article_id
+    )
   end
 end

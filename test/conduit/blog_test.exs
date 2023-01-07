@@ -1,6 +1,7 @@
 defmodule Conduit.BlogTest do
   use Conduit.DataCase
 
+  alias Conduit.Blog.Comment
   alias Conduit.Profile
   alias Conduit.Blog
 
@@ -186,6 +187,30 @@ defmodule Conduit.BlogTest do
       {:ok, _} = Blog.create_favorite(user_fixture(), article)
 
       assert Blog.count_favorites(article) == 2
+    end
+
+    test "an user should be able to create comments" do
+      comment_text = "hello world!"
+
+      article = article_fixture()
+      comment_author = user_fixture()
+
+      assert {:ok, %Comment{} = comment} =
+               Blog.create_comment(%{body: comment_text}, article, comment_author)
+
+      assert comment.body == comment_text
+
+      fetched_comment = Blog.get_comment_by_id(comment.id)
+
+      assert comment == fetched_comment
+    end
+
+    test "Blog.get_article_comments/1 should return created articles" do
+      article = article_fixture()
+      {:ok, comment1} = Blog.create_comment(%{body: "comment-1"}, article, user_fixture())
+      {:ok, comment2} = Blog.create_comment(%{body: "comment-1"}, article, user_fixture())
+
+      assert [comment1, comment2] == Blog.get_article_comments(article)
     end
   end
 end
