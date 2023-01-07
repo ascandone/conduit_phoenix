@@ -189,4 +189,8 @@ defmodule Conduit.Blog do
   def preload_comment(%Comment{} = comment) do
     Repo.preload(comment, :author)
   end
+
+  def delete_comment(%Comment{} = comment) do
+    Repo.delete(comment)
+  end
 end

@@ -227,5 +227,15 @@ defmodule Conduit.BlogTest do
 
       assert comment.author.username == author.username
     end
+
+    test "Blog.delete_comment/1 should delete an existing comment" do
+      {:ok, comment} =
+        Blog.create_comment(%{body: "comment-1"}, article_fixture(), user_fixture())
+
+      assert {:ok, old_comment} = Blog.delete_comment(comment)
+
+      assert comment.id == old_comment.id
+      assert Blog.get_comment_by_id(comment.id) == nil
+    end
   end
 end
