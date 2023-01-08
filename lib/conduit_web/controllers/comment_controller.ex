@@ -23,4 +23,16 @@ defmodule ConduitWeb.CommentController do
 
     render(conn, :show, comment: comment)
   end
+
+  def delete(conn, %{"slug" => _slug, "id" => id}) do
+    user = Guardian.Plug.current_resource(conn)
+    comment = Blog.get_comment_by_id(id)
+
+    if user.id == comment.author_id do
+      {:ok, _} = Blog.delete_comment(comment)
+      conn
+    else
+      {:error, :unauthorized}
+    end
+  end
 end

@@ -37,4 +37,19 @@ defmodule ConduitWeb.CommentControllerTest do
       assert comment["author"] != nil
     end
   end
+
+  describe "DELETE /articles/:slug/comments/:id" do
+    test "should add a comment to an article", %{conn: conn} do
+      author = user_fixture()
+      conn = login_with(conn, author)
+
+      article = article_fixture()
+
+      {:ok, comment} = Blog.create_comment(%{body: "example body"}, article, author)
+
+      _conn = delete(conn, ~p"/api/articles/#{article.slug}/comments/#{comment.id}")
+
+      assert Blog.get_comment_by_id(comment.id) == nil
+    end
+  end
 end

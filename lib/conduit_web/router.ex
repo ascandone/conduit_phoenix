@@ -36,6 +36,7 @@ defmodule ConduitWeb.Router do
     post "/profiles/:username/follow", ProfileController, :follow
     delete "/profiles/:username/follow", ProfileController, :unfollow
     post "/articles/:slug/comments", CommentController, :create
+    delete "/articles/:slug/comments/:id", CommentController, :delete
   end
 
   scope "/api", ConduitWeb do
