@@ -102,6 +102,18 @@ defmodule Conduit.BlogTest do
       assert res_a2.id == a2.id
     end
 
+    test "count_feed_articles/1 return the feed articles count" do
+      user = user_fixture()
+      u1 = user_fixture()
+      Profile.follow(user, u1)
+
+      for _ <- 1..3 do
+        article_fixture(%{author_id: u1.id})
+      end
+
+      assert Blog.count_feed_articles(user) == 3
+    end
+
     test "get_article_by_slug/1 returns the article with given id" do
       article = article_fixture(%{title: "example title"})
       assert Blog.get_article_by_slug("example-title") == article
