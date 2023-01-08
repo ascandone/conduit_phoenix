@@ -24,12 +24,19 @@ defmodule ConduitWeb.ArticleController do
       Blog.list_articles(
         author: params["author"],
         offset: params["offset"],
-        limit: params["limit"],
+        limit: params["limit"] || 20,
         favorited: params["favorited"]
       )
       |> Enum.map(&Blog.article_preload(&1, user))
 
-    render(conn, :index, articles: preloaded_articles)
+    articles_count =
+      Blog.count_articles(
+        author: params["author"],
+        favorited: params["favorited"]
+      )
+
+    # TODO articles_count
+    render(conn, :index, articles: preloaded_articles, articles_count: articles_count)
   end
 
   def show(conn, %{"slug" => slug}) do
@@ -98,7 +105,8 @@ defmodule ConduitWeb.ArticleController do
       |> Blog.feed()
       |> Enum.map(&Blog.article_preload(&1, user))
 
-    render(conn, :index, articles: articles)
+    # TODO articles count
+    render(conn, :index, articles: articles, articles_count: 0)
   end
 
   defp get_article_by_slug(slug) do

@@ -31,6 +31,13 @@ defmodule Conduit.Blog do
     |> Repo.all()
   end
 
+  def count_articles(options \\ []) do
+    Article
+    |> article_option(:author, options[:author])
+    |> article_option(:favorited, options[:favorited])
+    |> Repo.aggregate(:count)
+  end
+
   defp article_option(query, _, nil) do
     query
   end

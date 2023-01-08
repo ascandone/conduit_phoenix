@@ -66,6 +66,20 @@ defmodule ConduitWeb.ArticleControllerTest do
 
       assert article_response_1["slug"] == article1.slug
     end
+
+    test "should cap the fetched articles to 20, and return the right count", %{conn: conn} do
+      max_articles = 40
+
+      for _ <- 1..max_articles do
+        article_fixture()
+      end
+
+      conn = get(conn, ~p"/api/articles")
+      %{"articles" => articles, "articlesCount" => articles_count} = json_response(conn, 200)
+
+      assert Enum.count(articles) == 20
+      assert articles_count == max_articles
+    end
   end
 
   describe "GET /articles/:slug" do

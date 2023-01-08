@@ -49,8 +49,8 @@ defmodule ConduitWeb.ArticleJSONTest do
     article1 = @example_article
     article2 = Map.put(@example_article, "slug", "slug-2")
 
-    assert %{"articles" => [article_json_1, article_json_2]} =
-             ArticleJSON.index(%{articles: [article1, article2]})
+    assert %{"articles" => [article_json_1, article_json_2], "articlesCount" => 2} =
+             ArticleJSON.index(%{articles: [article1, article2], articles_count: 2})
 
     assert article_json_1["slug"] == article1.slug
     assert article_json_2["slug"] == article2.slug

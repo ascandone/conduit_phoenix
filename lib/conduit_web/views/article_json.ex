@@ -22,11 +22,11 @@ defmodule ConduitWeb.ArticleJSON do
     }
   end
 
-  def index(%{articles: articles}) do
-    # TODO articles count
+  def index(%{articles: articles, articles_count: articles_count}) do
     %{
       # TODO fix `favorites_count`
-      "articles" => Enum.map(articles, fn article -> article(%{article: article}) end)
+      "articles" => Enum.map(articles, fn article -> article(%{article: article}) end),
+      "articlesCount" => articles_count
     }
   end
 end
