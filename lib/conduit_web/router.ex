@@ -46,6 +46,7 @@ defmodule ConduitWeb.Router do
     get "/profiles/:username", ProfileController, :show
     get "/articles", ArticleController, :index
     get "/articles/:slug", ArticleController, :show
+    get "/articles/:slug/comments", CommentController, :index
   end
 
   # Enable LiveDashboard in development
