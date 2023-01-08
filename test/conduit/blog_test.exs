@@ -75,6 +75,33 @@ defmodule Conduit.BlogTest do
       assert article.id == a1.id
     end
 
+    test "feed/1 handles the `limit` option" do
+      user = user_fixture()
+      u1 = user_fixture()
+      Profile.follow(user, u1)
+
+      article_fixture(%{author_id: u1.id})
+      article_fixture(%{author_id: u1.id})
+      article_fixture(%{author_id: u1.id})
+
+      articles = Blog.feed(user, limit: 2)
+      assert Enum.count(articles) == 2
+    end
+
+    test "feed/1 handles the `offset` option" do
+      user = user_fixture()
+      u1 = user_fixture()
+      Profile.follow(user, u1)
+
+      article_fixture(%{author_id: u1.id})
+      a1 = article_fixture(%{author_id: u1.id})
+      a2 = article_fixture(%{author_id: u1.id})
+
+      assert [res_a1, res_a2] = Blog.feed(user, offset: 1)
+      assert res_a1.id == a1.id
+      assert res_a2.id == a2.id
+    end
+
     test "get_article_by_slug/1 returns the article with given id" do
       article = article_fixture(%{title: "example title"})
       assert Blog.get_article_by_slug("example-title") == article

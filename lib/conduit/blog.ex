@@ -145,12 +145,14 @@ defmodule Conduit.Blog do
     Repo.delete(article)
   end
 
-  def feed(%User{id: user_id}) do
-    Repo.all(
-      from a in Article,
-        join: f in Follow,
-        where: f.user_id == ^user_id and f.target_id == a.author_id
+  def feed(%User{id: user_id}, options \\ []) do
+    from(a in Article,
+      join: f in Follow,
+      where: f.user_id == ^user_id and f.target_id == a.author_id
     )
+    |> article_option(:limit, options[:limit] || 100)
+    |> article_option(:offset, options[:offset])
+    |> Repo.all()
   end
 
   def favorited?(%User{id: user_id}, %Article{id: article_id}) do
