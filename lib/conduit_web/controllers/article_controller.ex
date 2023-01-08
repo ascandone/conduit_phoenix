@@ -97,16 +97,20 @@ defmodule ConduitWeb.ArticleController do
     render(conn, :show, article: article)
   end
 
-  def feed(conn, _params) do
+  def feed(conn, params) do
     user = Guardian.Plug.current_resource(conn)
 
     articles =
       user
-      |> Blog.feed()
+      |> Blog.feed(
+        offset: params["offset"],
+        limit: params["limit"] || 20
+      )
       |> Enum.map(&Blog.article_preload(&1, user))
 
-    # TODO articles count
-    render(conn, :index, articles: articles, articles_count: 0)
+    articles_count = Blog.count_feed_articles(user)
+
+    render(conn, :index, articles: articles, articles_count: articles_count)
   end
 
   defp get_article_by_slug(slug) do

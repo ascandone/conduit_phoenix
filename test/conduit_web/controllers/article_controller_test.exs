@@ -2,6 +2,8 @@ defmodule ConduitWeb.ArticleControllerTest do
   use ConduitWeb.ConnCase, async: true
 
   alias Conduit.Blog
+  alias Conduit.Profile
+
   import Conduit.AccountsFixtures
   import Conduit.BlogFixtures
 
@@ -75,6 +77,44 @@ defmodule ConduitWeb.ArticleControllerTest do
       end
 
       conn = get(conn, ~p"/api/articles")
+      %{"articles" => articles, "articlesCount" => articles_count} = json_response(conn, 200)
+
+      assert Enum.count(articles) == 20
+      assert articles_count == max_articles
+    end
+  end
+
+  describe "GET /articles/feed" do
+    test "should show the user's feed", %{conn: conn} do
+      %{conn: conn, user: user} = login(%{conn: conn})
+
+      user1 = user_fixture()
+      Profile.follow(user, user1)
+
+      article1 = article_fixture(%{author_id: user1.id})
+      article2 = article_fixture(%{author_id: user1.id})
+
+      conn = get(conn, ~p"/api/articles/feed")
+
+      assert %{"articles" => [article_response_1, article_response_2]} = json_response(conn, 200)
+
+      assert article_response_1["slug"] == article1.slug
+      assert article_response_2["slug"] == article2.slug
+    end
+
+    test "should cap the fetched articles to 20, and return the right count", %{conn: conn} do
+      %{conn: conn, user: user} = login(%{conn: conn})
+
+      user1 = user_fixture()
+      Profile.follow(user, user1)
+
+      max_articles = 40
+
+      for _ <- 1..max_articles do
+        article_fixture(%{author_id: user1.id})
+      end
+
+      conn = get(conn, ~p"/api/articles/feed")
       %{"articles" => articles, "articlesCount" => articles_count} = json_response(conn, 200)
 
       assert Enum.count(articles) == 20
