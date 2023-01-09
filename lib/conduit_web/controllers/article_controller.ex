@@ -90,11 +90,15 @@ defmodule ConduitWeb.ArticleController do
     user = Guardian.Plug.current_resource(conn)
     article = Blog.get_article_by_slug(slug)
 
-    {:ok, _} = Blog.delete_favorite(user, article)
+    if article.author_id == user.id do
+      {:ok, _} = Blog.delete_favorite(user, article)
 
-    article = Blog.article_preload(article, user)
+      article = Blog.article_preload(article, user)
 
-    render(conn, :show, article: article)
+      render(conn, :show, article: article)
+    else
+      {:error, :forbidden}
+    end
   end
 
   def feed(conn, params) do

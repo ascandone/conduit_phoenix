@@ -260,13 +260,25 @@ defmodule ConduitWeb.ArticleControllerTest do
     setup [:login]
 
     test "should unfavorite the article", %{conn: conn, user: user} do
-      article = article_fixture()
+      article = article_fixture(%{author_id: user.id})
       Blog.create_favorite(user, article)
       conn = delete(conn, ~p"/api/articles/#{article.slug}/favorite")
 
       assert %{"article" => %{"favorited" => false}} = json_response(conn, 200)
 
       assert Blog.favorited?(user, article) == false
+    end
+
+    test "should not allow deleting another user's favorite", %{conn: conn} do
+      article = article_fixture()
+      another_user = user_fixture()
+      Blog.create_favorite(another_user, article)
+
+      conn = delete(conn, ~p"/api/articles/#{article.slug}/favorite")
+
+      assert json_response(conn, 403)
+
+      assert Blog.favorited?(another_user, article)
     end
   end
 end
