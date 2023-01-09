@@ -1,0 +1,19 @@
+defmodule ConduitWeb.Schema do
+  use Absinthe.Schema
+  import_types(ConduitWeb.Schema.ContentTypes)
+
+  alias ConduitWeb.Resolvers
+
+  query do
+    @desc "Get all articles"
+    field :articles, list_of(:article) do
+      resolve(&Resolvers.Content.list_articles/3)
+    end
+
+    @desc "Get an article"
+    field :article, non_null(:article) do
+      arg(:slug, non_null(:string))
+      resolve(&Resolvers.Content.get_article/3)
+    end
+  end
+end

@@ -51,6 +51,13 @@ defmodule ConduitWeb.Router do
     get "/articles/:slug/comments", CommentController, :index
   end
 
+  scope "/" do
+    pipe_through :api
+
+    forward "/graphiql", Absinthe.Plug.GraphiQL, schema: ConduitWeb.Schema, interface: :playground
+    forward "/graphql", Absinthe.Plug, schema: ConduitWeb.Schema
+  end
+
   # Enable LiveDashboard in development
   if Application.compile_env(:conduit, :dev_routes) do
     # If you want to use the LiveDashboard in production, you should put
