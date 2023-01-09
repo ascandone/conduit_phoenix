@@ -39,13 +39,12 @@ defmodule ConduitWeb.CommentControllerTest do
   end
 
   describe "DELETE /articles/:slug/comments/:id" do
-    test "should add a comment to an article", %{conn: conn} do
-      author = user_fixture()
-      conn = login_with(conn, author)
+    setup [:login]
 
+    test "should add a comment to an article", %{conn: conn, user: user} do
       article = article_fixture()
 
-      {:ok, comment} = Blog.create_comment(%{body: "example body"}, article, author)
+      {:ok, comment} = Blog.create_comment(%{body: "example body"}, article, user)
 
       _conn = delete(conn, ~p"/api/articles/#{article.slug}/comments/#{comment.id}")
 

@@ -162,10 +162,9 @@ defmodule ConduitWeb.ArticleControllerTest do
   end
 
   describe "PUT /articles/:slug" do
-    test "should update the given article", %{conn: conn} do
-      user = user_fixture()
-      conn = login_with(conn, user)
+    setup [:login]
 
+    test "should update the given article", %{conn: conn, user: user} do
       article_attrs = %{description: "updated description"}
 
       article = article_fixture(%{author_id: user.id})
@@ -177,9 +176,6 @@ defmodule ConduitWeb.ArticleControllerTest do
 
     test "should not allow updating another user's article", %{conn: conn} do
       article = article_fixture()
-
-      user = user_fixture()
-      conn = login_with(conn, user)
 
       article_attrs = %{description: "updated description"}
       conn = put(conn, ~p"/api/articles/#{article.slug}", article: article_attrs)
@@ -226,10 +222,9 @@ defmodule ConduitWeb.ArticleControllerTest do
   end
 
   describe "DELETE /articles/:slug" do
-    test "should delete the article", %{conn: conn} do
-      user = user_fixture()
-      conn = login_with(conn, user)
+    setup [:login]
 
+    test "should delete the article", %{conn: conn, user: user} do
       article = article_fixture(%{author_id: user.id})
 
       delete(conn, ~p"/api/articles/#{article.slug}")
@@ -238,9 +233,6 @@ defmodule ConduitWeb.ArticleControllerTest do
     end
 
     test "should not allow deleting another user's article", %{conn: conn} do
-      user = user_fixture()
-      conn = login_with(conn, user)
-
       article = article_fixture()
 
       conn = delete(conn, ~p"/api/articles/#{article.slug}")
