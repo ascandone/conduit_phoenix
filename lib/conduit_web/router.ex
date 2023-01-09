@@ -4,9 +4,9 @@ defmodule ConduitWeb.Router do
   pipeline :api do
     plug :accepts, ["json"]
 
-    # error_handler: Conduit.AuthErrorHandler
     plug Guardian.Plug.Pipeline,
-      module: Conduit.Guardian
+      module: Conduit.Guardian,
+      error_handler: ConduitWeb.AuthErrorHandler
 
     # plug Guardian.Plug.VerifySession
     plug Guardian.Plug.VerifyHeader, scheme: "Token"
