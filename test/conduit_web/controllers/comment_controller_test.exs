@@ -50,5 +50,17 @@ defmodule ConduitWeb.CommentControllerTest do
 
       assert Blog.get_comment_by_id(comment.id) == nil
     end
+
+    test "should not allow deleting another user's comment", %{conn: conn} do
+      another_user = user_fixture()
+      article = article_fixture()
+
+      {:ok, comment} = Blog.create_comment(%{body: "example body"}, article, another_user)
+
+      conn = delete(conn, ~p"/api/articles/#{article.slug}/comments/#{comment.id}")
+
+      assert json_response(conn, 403)
+      assert Blog.get_comment_by_id(comment.id) != nil
+    end
   end
 end

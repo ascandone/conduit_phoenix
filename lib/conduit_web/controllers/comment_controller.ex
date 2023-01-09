@@ -32,7 +32,7 @@ defmodule ConduitWeb.CommentController do
       {:ok, _} = Blog.delete_comment(comment)
       conn
     else
-      {:error, :unauthorized}
+      {:error, :forbidden}
     end
   end
 end
