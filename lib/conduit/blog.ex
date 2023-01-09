@@ -31,7 +31,7 @@ defmodule Conduit.Blog do
     |> Repo.all()
   end
 
-  def count_articles(options \\ []) do
+  def count_articles(options) do
     Article
     |> article_option(:author, options[:author])
     |> article_option(:favorited, options[:favorited])
@@ -93,7 +93,7 @@ defmodule Conduit.Blog do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_article(attrs \\ %{}) do
+  def create_article(attrs) do
     %Article{}
     |> Article.changeset(attrs)
     |> Repo.insert()

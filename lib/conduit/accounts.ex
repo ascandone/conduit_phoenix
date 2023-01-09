@@ -25,13 +25,13 @@ defmodule Conduit.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
-  def register_user(attrs \\ %{}) do
+  def register_user(attrs) do
     %User{}
     |> User.registration_changeset(attrs)
     |> Repo.insert()
   end
 
-  def update_user(%User{} = user, attrs \\ %{}) do
+  def update_user(%User{} = user, attrs) do
     user
     |> User.changeset(attrs)
     |> Repo.update()
