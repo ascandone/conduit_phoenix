@@ -30,13 +30,8 @@ defmodule ConduitWeb.ProfileController do
 
   def unfollow(conn, %{"username" => username}) do
     user = Guardian.Plug.current_resource(conn)
-
-    if user == nil do
-      {:error, :unauthorized}
-    else
-      target = Accounts.get_user_by_username(username)
-      Profile.unfollow(user, target)
-      render(conn, :show, profile: %{target | following: false})
-    end
+    target = Accounts.get_user_by_username(username)
+    Profile.unfollow(user, target)
+    render(conn, :show, profile: %{target | following: false})
   end
 end
