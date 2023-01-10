@@ -14,8 +14,8 @@ defmodule ConduitWeb.Resolvers.Content do
     }
   end
 
-  def list_articles(_parent, _args, _resolution) do
-    articles = Blog.list_articles()
+  def list_articles(parent, _args, _resolution) do
+    articles = Blog.list_articles(author: parent[:username])
     {:ok, Enum.map(articles, &article_to_gql/1)}
   end
 
