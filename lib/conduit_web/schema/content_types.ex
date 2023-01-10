@@ -20,6 +20,10 @@ defmodule ConduitWeb.Schema.ContentTypes do
     field :body, :string
     field :created_at, non_null(:string)
 
+    field :favorites_count, non_null(:integer) do
+      resolve(&Resolvers.Content.favorites_count/3)
+    end
+
     field :author, non_null(:profile) do
       resolve(&Resolvers.Content.get_article_profile/3)
     end

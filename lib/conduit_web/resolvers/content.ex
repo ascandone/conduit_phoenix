@@ -40,6 +40,11 @@ defmodule ConduitWeb.Resolvers.Content do
     {:ok, user}
   end
 
+  def favorites_count(%Article{} = article, _args, _resolution) do
+    count = Blog.count_favorites(article)
+    {:ok, count}
+  end
+
   def get_article_profile(%Article{author_id: id}, _args, _resolution) do
     user = Accounts.get_user_by_id(id)
     {:ok, user}
