@@ -10,7 +10,7 @@ defmodule ConduitWeb.Schema do
     end
 
     @desc "Get all articles"
-    field :articles, list_of(:article) do
+    field :articles, non_null(list_of(:article)) do
       arg(:limit, :integer)
       arg(:offset, :integer)
       resolve(&Resolvers.Content.list_articles/3)
