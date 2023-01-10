@@ -35,5 +35,11 @@ defmodule ConduitWeb.Schema do
     field :user, non_null(:user) do
       resolve(&Resolvers.Content.get_current_user/3)
     end
+
+    field :login, :user do
+      arg(:email, non_null(:string))
+      arg(:password, non_null(:string))
+      resolve(&Resolvers.Content.login/3)
+    end
   end
 end

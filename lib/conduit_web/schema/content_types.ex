@@ -56,6 +56,10 @@ defmodule ConduitWeb.Schema.ContentTypes do
   object :user do
     field :email, non_null(:string)
 
+    field :token, non_null(:string) do
+      resolve(&Resolvers.Content.get_user_token/3)
+    end
+
     field :profile, non_null(:profile) do
       resolve(&Resolvers.Content.get_user_profile/3)
     end

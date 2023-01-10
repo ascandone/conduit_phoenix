@@ -78,4 +78,16 @@ defmodule ConduitWeb.Resolvers.Content do
     comments = Blog.get_article_comments(article)
     {:ok, comments}
   end
+
+  def login(_parent, %{email: email, password: password}, _resolution) do
+    case Accounts.authenticate_user(email, password) do
+      {:ok, user} -> {:ok, user}
+      _ -> {:ok, nil}
+    end
+  end
+
+  def get_user_token(%User{} = user, _args, _resolution) do
+    {:ok, token, _claims} = Conduit.Guardian.encode_and_sign(user)
+    {:ok, token}
+  end
 end
