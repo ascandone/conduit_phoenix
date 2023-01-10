@@ -26,5 +26,9 @@ defmodule ConduitWeb.Schema.ContentTypes do
 
   object :user do
     field :email, non_null(:string)
+
+    field :profile, non_null(:profile) do
+      resolve(&Resolvers.Content.get_user_profile/3)
+    end
   end
 end

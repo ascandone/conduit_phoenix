@@ -16,7 +16,7 @@ defmodule ConduitWeb.Resolvers.Content do
   end
 
   def list_articles(parent, _args, _resolution) do
-    articles = Blog.list_articles(author: parent[:username])
+    articles = Blog.list_articles(author: Map.get(parent, :username))
     {:ok, Enum.map(articles, &article_to_gql/1)}
   end
 
@@ -60,5 +60,9 @@ defmodule ConduitWeb.Resolvers.Content do
 
   def get_current_user(_parent, _args, %{context: %{current_user: current_user}}) do
     {:ok, current_user}
+  end
+
+  def get_user_profile(parent, _args, _resolution) do
+    {:ok, parent}
   end
 end
