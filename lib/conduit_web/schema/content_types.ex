@@ -8,6 +8,10 @@ defmodule ConduitWeb.Schema.ContentTypes do
     field :description, :string
     field :body, :string
     field :created_at, non_null(:string)
+
+    field :author, non_null(:profile) do
+      resolve(&Resolvers.Content.get_profile/3)
+    end
   end
 
   object :profile do

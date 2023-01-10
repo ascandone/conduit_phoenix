@@ -10,7 +10,8 @@ defmodule ConduitWeb.Resolvers.Content do
       title: article.title,
       description: article.description,
       created_at: article.inserted_at,
-      body: article.body
+      body: article.body,
+      author_id: article.author_id
     }
   end
 
@@ -41,6 +42,15 @@ defmodule ConduitWeb.Resolvers.Content do
 
   def get_profile(_parent, %{username: username}, _resolution) do
     user = Accounts.get_user_by_username(username)
+
+    case user do
+      nil -> {:ok, nil}
+      _ -> {:ok, profile_to_gql(user)}
+    end
+  end
+
+  def get_profile(%{author_id: id}, _args, _resolution) do
+    user = Accounts.get_user_by_id(id)
 
     case user do
       nil -> {:ok, nil}
