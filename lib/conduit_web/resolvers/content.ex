@@ -4,13 +4,24 @@ defmodule ConduitWeb.Resolvers.Content do
   alias Conduit.Accounts.User
   alias Conduit.Blog.Article
 
-  def list_articles(_parent, _args, _resolution) do
-    articles = Blog.list_articles()
+  def list_articles(_parent, args, _resolution) do
+    articles = Blog.list_articles(args)
     {:ok, articles}
   end
 
-  def list_user_articles(%User{username: username}, _args, _resolution) do
-    articles = Blog.list_articles(author: username)
+  def articles_count(_parent, _args, _resolution) do
+    count = Blog.count_articles()
+    {:ok, count}
+  end
+
+  def profile_articles_count(%User{username: username}, _args, _resolution) do
+    count = Blog.count_articles(author: username)
+    {:ok, count}
+  end
+
+  def list_user_articles(%User{username: username}, args, _resolution) do
+    args = Map.put(args, :author, username)
+    articles = Blog.list_articles(args)
     {:ok, articles}
   end
 

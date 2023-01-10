@@ -34,7 +34,13 @@ defmodule ConduitWeb.Schema.ContentTypes do
     field :bio, :string
     field :image, :string
 
+    field :articles_count, non_null(:integer) do
+      resolve(&Resolvers.Content.profile_articles_count/3)
+    end
+
     field :articles, non_null(list_of(:article)) do
+      arg(:limit, :integer)
+      arg(:offset, :integer)
       resolve(&Resolvers.Content.list_user_articles/3)
     end
   end

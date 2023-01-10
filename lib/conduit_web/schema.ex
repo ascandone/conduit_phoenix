@@ -5,8 +5,14 @@ defmodule ConduitWeb.Schema do
   alias ConduitWeb.Resolvers
 
   query do
+    field :articles_count, non_null(:integer) do
+      resolve(&Resolvers.Content.articles_count/3)
+    end
+
     @desc "Get all articles"
     field :articles, list_of(:article) do
+      arg(:limit, :integer)
+      arg(:offset, :integer)
       resolve(&Resolvers.Content.list_articles/3)
     end
 
