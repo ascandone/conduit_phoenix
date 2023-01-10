@@ -9,7 +9,7 @@ defmodule ConduitWeb.Schema.ContentTypes do
     field :body, :string
 
     field :author, non_null(:profile) do
-      resolve(&Resolvers.Content.get_profile/3)
+      resolve(&Resolvers.Content.get_comment_profile/3)
     end
   end
 
@@ -21,7 +21,11 @@ defmodule ConduitWeb.Schema.ContentTypes do
     field :created_at, non_null(:string)
 
     field :author, non_null(:profile) do
-      resolve(&Resolvers.Content.get_profile/3)
+      resolve(&Resolvers.Content.get_article_profile/3)
+    end
+
+    field :comments, non_null(list_of(:comment)) do
+      resolve(&Resolvers.Content.get_article_comment/3)
     end
   end
 
@@ -31,7 +35,7 @@ defmodule ConduitWeb.Schema.ContentTypes do
     field :image, :string
 
     field :articles, non_null(list_of(:article)) do
-      resolve(&Resolvers.Content.list_articles/3)
+      resolve(&Resolvers.Content.list_user_articles/3)
     end
   end
 
