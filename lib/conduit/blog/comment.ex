@@ -2,7 +2,7 @@ defmodule Conduit.Blog.Comment do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @timestamps_opts [type: :utc_datetime]
+  @timestamps_opts [type: :utc_datetime, inserted_at: :created_at]
   schema "comments" do
     field :body, :string
 

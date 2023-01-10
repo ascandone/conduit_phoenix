@@ -2,7 +2,7 @@ defmodule Conduit.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @timestamps_opts [type: :utc_datetime]
+  @timestamps_opts [type: :utc_datetime, inserted_at: :created_at]
   schema "users" do
     field :email, :string
     field :password, :string, virtual: true

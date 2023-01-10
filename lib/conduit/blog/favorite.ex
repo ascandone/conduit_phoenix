@@ -5,7 +5,7 @@ defmodule Conduit.Blog.Favorite do
   alias Conduit.Accounts.User
   alias Conduit.Blog.Article
 
-  @timestamps_opts [type: :utc_datetime]
+  @timestamps_opts [type: :utc_datetime, inserted_at: :created_at]
   @primary_key false
   schema "favorites" do
     belongs_to :user, User, primary_key: true

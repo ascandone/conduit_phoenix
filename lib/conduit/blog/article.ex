@@ -3,7 +3,7 @@ defmodule Conduit.Blog.Article do
   import Ecto.Changeset
   alias Conduit.Blog.Favorite
 
-  @timestamps_opts [type: :utc_datetime]
+  @timestamps_opts [type: :utc_datetime, inserted_at: :created_at]
   schema "articles" do
     field :body, :string
     field :description, :string

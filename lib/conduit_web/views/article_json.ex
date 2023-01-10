@@ -8,7 +8,7 @@ defmodule ConduitWeb.ArticleJSON do
       "title" => article.title,
       "description" => article.description,
       "body" => article.body,
-      "createdAt" => DateTime.to_iso8601(article.inserted_at),
+      "createdAt" => DateTime.to_iso8601(article.created_at),
       "updatedAt" => DateTime.to_iso8601(article.updated_at),
       "author" => ProfileJSON.profile(%{profile: article.author}),
       "favorited" => article.favorited,

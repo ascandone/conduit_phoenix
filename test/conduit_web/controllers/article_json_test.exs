@@ -16,7 +16,7 @@ defmodule ConduitWeb.ArticleJSONTest do
     title: "How to train your dragon",
     description: "Ever wonder how?",
     body: "It takes a Jacobian",
-    inserted_at: ~U[2016-02-18T03:22:56.637Z],
+    created_at: ~U[2016-02-18T03:22:56.637Z],
     updated_at: ~U[2016-02-18T03:48:35.824Z],
     author: @example_user,
     favorites: [%Favorite{}],

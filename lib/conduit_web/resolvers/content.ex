@@ -1,22 +1,10 @@
 defmodule ConduitWeb.Resolvers.Content do
   alias Conduit.{Accounts, Blog}
   alias Conduit.Accounts.User
-  alias Conduit.Blog.{Article, Comment}
-
-  defp article_to_gql(%Article{} = article) do
-    %{
-      slug: article.slug,
-      title: article.title,
-      description: article.description,
-      created_at: article.inserted_at,
-      body: article.body,
-      author_id: article.author_id
-    }
-  end
 
   def list_articles(parent, _args, _resolution) do
     articles = Blog.list_articles(author: Map.get(parent, :username))
-    {:ok, Enum.map(articles, &article_to_gql/1)}
+    {:ok, articles}
   end
 
   def get_article(_parent, %{slug: slug}, _resolution) do
@@ -27,7 +15,7 @@ defmodule ConduitWeb.Resolvers.Content do
         {:ok, nil}
 
       _ ->
-        {:ok, article_to_gql(article)}
+        {:ok, article}
     end
   end
 
@@ -44,7 +32,7 @@ defmodule ConduitWeb.Resolvers.Content do
 
     case user do
       nil -> {:ok, nil}
-      _ -> {:ok, profile_to_gql(user)}
+      _ -> {:ok, user}
     end
   end
 
@@ -65,18 +53,8 @@ defmodule ConduitWeb.Resolvers.Content do
     {:ok, parent}
   end
 
-  defp comment_to_gql(%Comment{} = comment) do
-    %{
-      id: comment.id,
-      body: comment.body,
-      created_at: comment.inserted_at,
-      updated_at: comment.updated_at,
-      author_id: comment.author_id
-    }
-  end
-
   def get_comment_by_id(_parent, %{id: id}, _resolution) do
     comment = Blog.get_comment_by_id(id)
-    {:ok, comment_to_gql(comment)}
+    {:ok, comment}
   end
 end

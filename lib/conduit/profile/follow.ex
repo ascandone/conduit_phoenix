@@ -4,7 +4,7 @@ defmodule Conduit.Profile.Follow do
 
   alias Conduit.Accounts.User
 
-  @timestamps_opts [type: :utc_datetime]
+  @timestamps_opts [type: :utc_datetime, inserted_at: :created_at]
   @primary_key false
   schema "follows" do
     belongs_to :user, User, primary_key: true

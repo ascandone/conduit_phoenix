@@ -5,7 +5,7 @@ defmodule ConduitWeb.CommentJSON do
   defp comment(%{comment: %Comment{} = comment}) do
     %{
       "id" => comment.id,
-      "createdAt" => DateTime.to_iso8601(comment.inserted_at),
+      "createdAt" => DateTime.to_iso8601(comment.created_at),
       "updatedAt" => DateTime.to_iso8601(comment.updated_at),
       "body" => comment.body,
       "author" => ProfileJSON.profile(%{profile: comment.author})

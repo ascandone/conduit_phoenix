@@ -17,7 +17,7 @@ defmodule ConduitWeb.CommentJSONTest do
   @example_comment %Comment{
     id: 42,
     body: "It takes a Jacobian",
-    inserted_at: ~U[2016-02-18T03:22:56.637Z],
+    created_at: ~U[2016-02-18T03:22:56.637Z],
     updated_at: ~U[2016-02-18T03:22:56.637Z],
     author: @example_user
   }
