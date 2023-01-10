@@ -45,6 +45,17 @@ defmodule ConduitWeb.Resolvers.Content do
     {:ok, count}
   end
 
+  def favorited?(%Article{} = article, _args, %{context: context}) do
+    case context[:current_user] do
+      nil ->
+        {:ok, nil}
+
+      current_user ->
+        favorited? = Blog.favorited?(current_user, article)
+        {:ok, favorited?}
+    end
+  end
+
   def get_article_profile(%Article{author_id: id}, _args, _resolution) do
     user = Accounts.get_user_by_id(id)
     {:ok, user}

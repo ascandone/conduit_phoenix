@@ -24,6 +24,10 @@ defmodule ConduitWeb.Schema.ContentTypes do
       resolve(&Resolvers.Content.favorites_count/3)
     end
 
+    field :favorited, :boolean do
+      resolve(&Resolvers.Content.favorited?/3)
+    end
+
     field :author, non_null(:profile) do
       resolve(&Resolvers.Content.get_article_profile/3)
     end
