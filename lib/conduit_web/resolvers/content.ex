@@ -70,7 +70,8 @@ defmodule ConduitWeb.Resolvers.Content do
       id: comment.id,
       body: comment.body,
       created_at: comment.inserted_at,
-      updated_at: comment.updated_at
+      updated_at: comment.updated_at,
+      author_id: comment.author_id
     }
   end
 

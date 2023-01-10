@@ -7,6 +7,10 @@ defmodule ConduitWeb.Schema.ContentTypes do
     field :created_at, non_null(:string)
     field :updated_at, non_null(:string)
     field :body, :string
+
+    field :author, non_null(:profile) do
+      resolve(&Resolvers.Content.get_profile/3)
+    end
   end
 
   object :article do
