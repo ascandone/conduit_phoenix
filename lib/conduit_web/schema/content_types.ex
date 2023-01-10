@@ -2,6 +2,13 @@ defmodule ConduitWeb.Schema.ContentTypes do
   alias ConduitWeb.Resolvers
   use Absinthe.Schema.Notation
 
+  object :comment do
+    field :id, non_null(:id)
+    field :created_at, non_null(:string)
+    field :updated_at, non_null(:string)
+    field :body, :string
+  end
+
   object :article do
     field :slug, non_null(:string)
     field :title, non_null(:string)

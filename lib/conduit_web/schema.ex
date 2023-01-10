@@ -16,6 +16,11 @@ defmodule ConduitWeb.Schema do
       resolve(&Resolvers.Content.get_article/3)
     end
 
+    field :comment, :comment do
+      arg(:id, non_null(:id))
+      resolve(&Resolvers.Content.get_comment_by_id/3)
+    end
+
     field :profile, :profile do
       arg(:username, non_null(:string))
       resolve(&Resolvers.Content.get_profile/3)

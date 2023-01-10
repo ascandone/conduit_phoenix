@@ -1,8 +1,7 @@
 defmodule ConduitWeb.Resolvers.Content do
-  alias Conduit.Accounts
-  alias Conduit.Blog
+  alias Conduit.{Accounts, Blog}
   alias Conduit.Accounts.User
-  alias Blog.Article
+  alias Conduit.Blog.{Article, Comment}
 
   defp article_to_gql(%Article{} = article) do
     %{
@@ -64,5 +63,19 @@ defmodule ConduitWeb.Resolvers.Content do
 
   def get_user_profile(parent, _args, _resolution) do
     {:ok, parent}
+  end
+
+  defp comment_to_gql(%Comment{} = comment) do
+    %{
+      id: comment.id,
+      body: comment.body,
+      created_at: comment.inserted_at,
+      updated_at: comment.updated_at
+    }
+  end
+
+  def get_comment_by_id(_parent, %{id: id}, _resolution) do
+    comment = Blog.get_comment_by_id(id)
+    {:ok, comment_to_gql(comment)}
   end
 end
