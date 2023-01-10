@@ -8,4 +8,10 @@ defmodule ConduitWeb.Schema.ContentTypes do
     field :body, :string
     field :created_at, non_null(:string)
   end
+
+  object :profile do
+    field :username, non_null(:string)
+    field :bio, :string
+    field :image, :string
+  end
 end

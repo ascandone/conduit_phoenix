@@ -11,9 +11,14 @@ defmodule ConduitWeb.Schema do
     end
 
     @desc "Get an article"
-    field :article, non_null(:article) do
+    field :article, :article do
       arg(:slug, non_null(:string))
       resolve(&Resolvers.Content.get_article/3)
+    end
+
+    field :profile, :profile do
+      arg(:username, non_null(:string))
+      resolve(&Resolvers.Content.get_profile/3)
     end
   end
 end
