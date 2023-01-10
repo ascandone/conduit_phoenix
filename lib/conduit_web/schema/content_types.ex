@@ -23,4 +23,8 @@ defmodule ConduitWeb.Schema.ContentTypes do
       resolve(&Resolvers.Content.list_articles/3)
     end
   end
+
+  object :user do
+    field :email, non_null(:string)
+  end
 end

@@ -1,0 +1,28 @@
+defmodule ConduitWeb.Context do
+  @behaviour Plug
+
+  import Plug.Conn
+  alias Conduit.{Guardian, Accounts}
+
+  def init(opts) do
+    opts
+  end
+
+  def call(conn, _) do
+    context = build_context(conn)
+    Absinthe.Plug.put_options(conn, context: context)
+  end
+
+  @doc """
+  Return the current user context based on the authorization header
+  """
+  def build_context(conn) do
+    with ["Bearer " <> token] <- get_req_header(conn, "authorization"),
+         {:ok, %{"sub" => id}} <- Guardian.decode_and_verify(token) do
+      current_user = Accounts.get_user_by_id(id)
+      %{current_user: current_user}
+    else
+      _ -> %{}
+    end
+  end
+end

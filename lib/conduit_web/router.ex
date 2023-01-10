@@ -1,6 +1,10 @@
 defmodule ConduitWeb.Router do
   use ConduitWeb, :router
 
+  pipeline :graphql do
+    plug ConduitWeb.Context
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
 
@@ -52,7 +56,7 @@ defmodule ConduitWeb.Router do
   end
 
   scope "/" do
-    pipe_through :api
+    pipe_through [:api, :graphql]
 
     forward "/graphiql", Absinthe.Plug.GraphiQL, schema: ConduitWeb.Schema, interface: :playground
     forward "/graphql", Absinthe.Plug, schema: ConduitWeb.Schema

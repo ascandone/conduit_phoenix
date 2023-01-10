@@ -57,4 +57,8 @@ defmodule ConduitWeb.Resolvers.Content do
       _ -> {:ok, profile_to_gql(user)}
     end
   end
+
+  def get_current_user(_parent, _args, %{context: %{current_user: current_user}}) do
+    {:ok, current_user}
+  end
 end
