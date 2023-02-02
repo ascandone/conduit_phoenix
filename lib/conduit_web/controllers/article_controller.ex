@@ -35,7 +35,6 @@ defmodule ConduitWeb.ArticleController do
         favorited: params["favorited"]
       )
 
-    # TODO articles_count
     render(conn, :index, articles: preloaded_articles, articles_count: articles_count)
   end
 

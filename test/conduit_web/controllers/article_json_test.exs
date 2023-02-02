@@ -54,7 +54,5 @@ defmodule ConduitWeb.ArticleJSONTest do
 
     assert article_json_1["slug"] == article1.slug
     assert article_json_2["slug"] == article2.slug
-
-    # TODO articles count
   end
 end
