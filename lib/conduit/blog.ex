@@ -28,6 +28,7 @@ defmodule Conduit.Blog do
     |> article_option(:favorited, options[:favorited])
     |> article_option(:limit, options[:limit] || 100)
     |> article_option(:offset, options[:offset])
+    |> order_by(desc: :inserted_at)
     |> Repo.all()
   end
 
@@ -78,7 +79,7 @@ defmodule Conduit.Blog do
 
   """
   def get_article_by_slug(slug) do
-    Repo.one(from a in Article, where: a.slug == ^slug)
+    Repo.one(from(a in Article, where: a.slug == ^slug))
   end
 
   @doc """
@@ -148,7 +149,8 @@ defmodule Conduit.Blog do
   defp feed_query(%User{id: user_id}) do
     from(a in Article,
       join: f in Follow,
-      where: f.user_id == ^user_id and f.target_id == a.author_id
+      where: f.user_id == ^user_id and f.target_id == a.author_id,
+      order_by: [desc: a.inserted_at]
     )
   end
 
@@ -165,7 +167,9 @@ defmodule Conduit.Blog do
   end
 
   def favorited?(%User{id: user_id}, %Article{id: article_id}) do
-    Repo.exists?(from f in Favorite, where: f.user_id == ^user_id and f.article_id == ^article_id)
+    Repo.exists?(
+      from(f in Favorite, where: f.user_id == ^user_id and f.article_id == ^article_id)
+    )
   end
 
   def create_favorite(%User{id: user_id}, %Article{id: article_id}) do
@@ -175,12 +179,12 @@ defmodule Conduit.Blog do
   end
 
   def delete_favorite(%User{id: user_id}, %Article{id: article_id}) do
-    Repo.one(from f in Favorite, where: f.user_id == ^user_id and f.article_id == ^article_id)
+    Repo.one(from(f in Favorite, where: f.user_id == ^user_id and f.article_id == ^article_id))
     |> Repo.delete()
   end
 
   def count_favorites(%Article{id: article_id}) do
-    Repo.one!(from f in Favorite, where: f.article_id == ^article_id, select: count(f))
+    Repo.one!(from(f in Favorite, where: f.article_id == ^article_id, select: count(f)))
   end
 
   def create_comment(%{body: body}, %Article{id: article_id}, %User{id: user_id}) do
@@ -199,8 +203,9 @@ defmodule Conduit.Blog do
 
   def get_article_comments(%Article{id: article_id}) do
     Repo.all(
-      from c in Comment,
+      from(c in Comment,
         where: c.article_id == ^article_id
+      )
     )
   end
 
