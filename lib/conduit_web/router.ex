@@ -1,6 +1,15 @@
 defmodule ConduitWeb.Router do
   use ConduitWeb, :router
 
+  pipeline :browser do
+    plug :accepts, ["html"]
+    # plug :fetch_session
+    # plug :fetch_live_flash
+    plug :put_root_layout, {ConduitWeb.Layouts, :root}
+    # plug :protect_from_forgery
+    plug :put_secure_browser_headers
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
 
@@ -19,6 +28,13 @@ defmodule ConduitWeb.Router do
   pipeline :require_authenticated do
     plug Guardian.Plug.EnsureAuthenticated
     plug Guardian.Plug.LoadResource
+  end
+
+  scope "/", ConduitWeb do
+    pipe_through :browser
+
+    get "/article/:slug", ArticleController, :show
+    get "/profile/:username", ProfileController, :show
   end
 
   # Authorized endpoints

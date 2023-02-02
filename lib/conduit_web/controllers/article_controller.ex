@@ -1,6 +1,6 @@
 defmodule ConduitWeb.ArticleController do
   use ConduitWeb, :controller
-  plug :put_view, json: ConduitWeb.ArticleJSON
+  plug :put_view, json: ConduitWeb.ArticleJSON, html: ConduitWeb.ArticleHTML
   action_fallback ConduitWeb.FallbackController
 
   alias Conduit.Blog
