@@ -1,4 +1,6 @@
 # Conduit
+> [Conduit](https://www.realworld.how/docs/intro) (a medium clone) backend, implemented according to its specs
+
 
 To start your Phoenix server:
 
